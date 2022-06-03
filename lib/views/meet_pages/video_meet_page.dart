@@ -7,6 +7,7 @@ import 'package:jitsi_meet/jitsi_meet.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/authentication_provider.dart';
 import 'package:rc_clone/widgets/scaling_tile.dart';
+import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 
 enum VideoMeetStatus { none, joining, inProgress, terminated, error }
 
@@ -20,14 +21,20 @@ class VideoMeetPage extends StatefulWidget {
 }
 
 class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveClientMixin<VideoMeetPage> {
+  // Video meet settings
   bool _isAudioOnly = false;
   bool _isAudioMuted = true;
   bool _isVideoMuted = true;
   VideoMeetStatus _status = VideoMeetStatus.none;
 
+  // Screen recorder settings
+  EdScreenRecorder? edScreenRecorder;
+  Map<String, dynamic>? _response;
+
   @override
   void initState() {
     super.initState();
+    edScreenRecorder = EdScreenRecorder();
     JitsiMeet.addListener(
       JitsiMeetingListener(
         onConferenceWillJoin: _onConferenceWillJoin,
@@ -52,12 +59,10 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         child: CircularProgressIndicator(),
       );
     } else if (_status == VideoMeetStatus.inProgress) {
-      return const Center(
+      return Center(
         child: Text("Meeting in progress.\nGo to the meeting screen to end call.",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 24,
-          ),
+          style: Theme.of(context).textTheme.headline6
         ),
       );
     }
@@ -70,16 +75,14 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
             children: <Widget>[
               Text("Tap \"Start meeting\" to join the meet",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 24.sp
+                style: Theme.of(context).textTheme.headline5!.copyWith(
+                  fontFamily: 'Open Sans'
                 ),
               ),
               SizedBox(height: 10.h),
               Text("Your video and microphone are turned off by default.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 20.sp
-                ),
+                style: Theme.of(context).textTheme.bodyText1,
               ),
               SizedBox(height: 20.h),
               Row(
@@ -90,8 +93,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
                       _onAudioMutedChanged(!_isAudioMuted);
                     },
                     child: SizedBox(
-                      height: 80.h,
-                      width: 80.h,
+                      height: 70.h,
+                      width: 70.h,
                       child: Card(
                         elevation: 5.0,
                         color: _isAudioMuted ? Colors.red : Colors.white,
@@ -116,8 +119,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
                       _onVideoMutedChanged(!_isVideoMuted);
                     },
                     child: SizedBox(
-                      height: 80.h,
-                      width: 80.h,
+                      height: 70.h,
+                      width: 70.h,
                       child: Card(
                         elevation: 5.0,
                         color: _isVideoMuted ? Colors.red : Colors.white,
@@ -139,11 +142,14 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
                   ),
                   ScalingTile(
                     onPressed: () async {
+                      await startRecord(
+                        fileName: widget.claim.claimNumber + '_' + DateTime.now().toIso8601String(),
+                      );
                       await _joinMeeting();
                     },
                     child: SizedBox(
-                      height: 80.h,
-                      width: 200.h,
+                      height: 70.h,
+                      width: 180.h,
                       child: Card(
                         elevation: 5.0,
                         color: Colors.green,
@@ -164,7 +170,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
                   ),
                 ],
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 8.h),
               SizedBox(
                 width: 250.w,
                 child: CheckboxListTile(
@@ -208,22 +214,24 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     });
   }
 
-  void _onConferenceJoined(message) {
+  void _onConferenceJoined(message) async {
     setState(() {
       _status = VideoMeetStatus.inProgress;
     });
   }
 
-  void _onConferenceTerminated(message) {
+  void _onConferenceTerminated(message) async {
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
+    stopRecord();
   }
 
   void _onError(error) {
     setState(() {
       _status = VideoMeetStatus.error;
     });
+    stopRecord();
   }
 
   Future<void> _joinMeeting() async {
@@ -255,4 +263,27 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
   bool get wantKeepAlive {
     return true;
   }
+
+  Future<void> startRecord({required String fileName}) async {
+    var response = await edScreenRecorder?.startRecordScreen(
+      fileName: fileName,
+      audioEnable: true,
+    );
+
+    setState(() {
+      _response = response;
+    });
+
+    log(_response.toString());
+  }
+
+  Future<void> stopRecord() async {
+    var response = await edScreenRecorder?.stopRecord();
+    setState(() {
+      _response = response;
+    });
+
+    log(_response.toString());
+  }
 }
+

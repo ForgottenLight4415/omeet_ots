@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +29,10 @@ class _HomePageState extends State<HomePage> {
 
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
 
+  EdScreenRecorder? edScreenRecorder;
+  Map<String, dynamic>? _response;
+  bool _isRecording = false;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +41,7 @@ class _HomePageState extends State<HomePage> {
       _searchQuery = _searchController!.text;
       _claimsCubit.searchClaims(_searchQuery);
     });
+    edScreenRecorder = EdScreenRecorder();
   }
 
   @override
@@ -168,7 +176,50 @@ class _HomePageState extends State<HomePage> {
             Navigator.pushNamed(context, '/claim/meeting', arguments: claim);
           },
         ),
+        ClaimPageTiles(
+          faIcon: FontAwesomeIcons.recordVinyl,
+          label: _isRecording ? "Stop recording screen" : "Record Screen",
+          onPressed: () async {
+            if (!_isRecording) {
+              await startRecord(
+                fileName: claim.claimNumber + '_' + DateTime.now().toIso8601String(),
+              );
+              setState(() {
+                _isRecording = true;
+              });
+              Navigator.pop(context);
+            } else {
+              stopRecord();
+              setState(() {
+                _isRecording = false;
+              });
+              Navigator.pop(context);
+            }
+          },
+        ),
       ],
     );
+  }
+
+  Future<void> startRecord({required String fileName}) async {
+    var response = await edScreenRecorder?.startRecordScreen(
+      fileName: fileName,
+      audioEnable: true,
+    );
+
+    setState(() {
+      _response = response;
+    });
+
+    log(_response.toString());
+  }
+
+  Future<void> stopRecord() async {
+    var response = await edScreenRecorder?.stopRecord();
+    setState(() {
+      _response = response;
+    });
+
+    log(_response.toString());
   }
 }

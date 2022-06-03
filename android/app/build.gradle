@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.lightsoftware.rc_clone"
+        applicationId "com.lightsoftware.omeet"
         minSdkVersion 28
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
@@ -69,4 +69,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.HBiSoft:HBRecorder:2.0.3'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
 }

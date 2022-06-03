@@ -88,7 +88,7 @@ class SearchField extends StatelessWidget {
         focusNode: focusNode,
         keyboardType: keyboardType,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(top: 10.h),
+          contentPadding: EdgeInsets.only(top: 14.h),
           hintText: hintText,
           prefixIcon: const Icon(Icons.search),
           prefixIconColor: const Color(0xFFC4C6CC),
