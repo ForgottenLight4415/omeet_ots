@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jitsi_meet/jitsi_meet.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/authentication_provider.dart';
+import 'package:rc_clone/data/repositories/data_upload_repo.dart';
 import 'package:rc_clone/widgets/scaling_tile.dart';
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 
@@ -244,7 +246,9 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
         FeatureFlagEnum.RECORDING_ENABLED: true,
       };
-      var options = JitsiMeetingOptions(room: "${widget.claim.claimID}_${widget.claim.claimNumber}")
+      var options = JitsiMeetingOptions(
+          room: "${widget.claim.claimID}_${widget.claim.claimNumber}")
+        ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "RC"
         ..userEmail = await AuthenticationProvider.getEmail()
@@ -282,8 +286,27 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _response = response;
     });
-
     log(_response.toString());
+    File _videoFile = _response!['file'];
+    bool _result = await DataUploadRepository()
+        .uploadData(widget.claim.claimNumber, _videoFile);
+
+    if (_result) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("File uploaded successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      _videoFile.delete();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to upload the files."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 

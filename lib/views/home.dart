@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:rc_clone/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:rc_clone/data/repositories/auth_repo.dart';
+import 'package:rc_clone/data/repositories/data_upload_repo.dart';
 import 'package:rc_clone/widgets/claim_options_tile.dart';
 import 'package:rc_clone/widgets/input_fields.dart';
 import 'package:rc_clone/widgets/loading_widget.dart';
@@ -189,7 +191,7 @@ class _HomePageState extends State<HomePage> {
               });
               Navigator.pop(context);
             } else {
-              stopRecord();
+              stopRecord(claim);
               setState(() {
                 _isRecording = false;
               });
@@ -214,12 +216,31 @@ class _HomePageState extends State<HomePage> {
     log(_response.toString());
   }
 
-  Future<void> stopRecord() async {
+  Future<void> stopRecord(Claim claim) async {
     var response = await edScreenRecorder?.stopRecord();
     setState(() {
       _response = response;
     });
-
     log(_response.toString());
+    File _videoFile = _response!['file'];
+    bool _result = await DataUploadRepository()
+        .uploadData(claim.claimNumber, _videoFile);
+
+    if (_result) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("File uploaded successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      _videoFile.delete();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to upload the files."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
