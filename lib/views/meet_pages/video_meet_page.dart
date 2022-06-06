@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jitsi_meet/jitsi_meet.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/authentication_provider.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
+import 'package:rc_clone/utilities/screen_recorder.dart';
+import 'package:rc_clone/widgets/buttons.dart';
 import 'package:rc_clone/widgets/scaling_tile.dart';
-import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 
 enum VideoMeetStatus { none, joining, inProgress, terminated, error }
 
@@ -22,21 +21,21 @@ class VideoMeetPage extends StatefulWidget {
   State<VideoMeetPage> createState() => _VideoMeetPageState();
 }
 
-class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveClientMixin<VideoMeetPage> {
+class _VideoMeetPageState extends State<VideoMeetPage>
+    with AutomaticKeepAliveClientMixin<VideoMeetPage> {
   // Video meet settings
+  VideoMeetStatus _status = VideoMeetStatus.none;
   bool _isAudioOnly = false;
   bool _isAudioMuted = true;
   bool _isVideoMuted = true;
-  VideoMeetStatus _status = VideoMeetStatus.none;
 
   // Screen recorder settings
-  EdScreenRecorder? edScreenRecorder;
-  Map<String, dynamic>? _response;
+  ScreenRecorder? _screenRecorder;
 
   @override
   void initState() {
     super.initState();
-    edScreenRecorder = EdScreenRecorder();
+    _screenRecorder = ScreenRecorder();
     JitsiMeet.addListener(
       JitsiMeetingListener(
         onConferenceWillJoin: _onConferenceWillJoin,
@@ -53,6 +52,17 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     JitsiMeet.removeAllListeners();
   }
 
+  ThemeData customTheme(BuildContext context) {
+    return Theme.of(context).copyWith(
+        textTheme: Theme.of(context).textTheme.copyWith(
+            bodyText1: Theme.of(context).textTheme.bodyText1!.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -61,134 +71,119 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         child: CircularProgressIndicator(),
       );
     } else if (_status == VideoMeetStatus.inProgress) {
-      return Center(
-        child: Text("Meeting in progress.\nGo to the meeting screen to end call.",
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline6
+      return Theme(
+        data: customTheme(context),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Meeting in progress.\nGo to the meeting screen to end call.",
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            ScalingTile(
+              onPressed: () async {
+                await _closeMeeting();
+              },
+              child: SizedBox(
+                height: 70.h,
+                width: 180.h,
+                child: Card(
+                  color: Colors.red,
+                  child: Center(
+                    child: Text(
+                      "End meeting",
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
-    return  Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Center(
-          child: Column(
+    return Theme(
+      data: customTheme(context),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Tap \"Start meeting\" to join the meet",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline5!.copyWith(
+                fontFamily: 'Open Sans',
+            ),
+          ),
+          SizedBox(height: 10.h),
+          Text(
+            "Your video and microphone are turned off by default.",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          SizedBox(height: 20.h),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text("Tap \"Start meeting\" to join the meet",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline5!.copyWith(
-                  fontFamily: 'Open Sans'
+              VideoMeetToggleButton(
+                toggleParameter: _isAudioMuted,
+                primaryFaIcon: FontAwesomeIcons.microphoneSlash,
+                secondaryFaIcon: FontAwesomeIcons.microphone,
+                onPressed: () {
+                  _onAudioMutedChanged(!_isAudioMuted);
+                },
+              ),
+              VideoMeetToggleButton(
+                toggleParameter: _isVideoMuted,
+                primaryFaIcon: FontAwesomeIcons.videoSlash,
+                secondaryFaIcon: FontAwesomeIcons.video,
+                onPressed: () {
+                  _onVideoMutedChanged(!_isVideoMuted);
+                },
+              ),
+              ScalingTile(
+                onPressed: () async {
+                  await _screenRecorder!.startRecord(
+                    fileName: widget.claim.claimNumber +
+                        '_' +
+                        DateTime.now().toIso8601String(),
+                  );
+                  await _joinMeeting();
+                },
+                child: SizedBox(
+                  height: 70.h,
+                  width: 180.h,
+                  child: Card(
+                    color: Colors.green,
+                    child: Center(
+                      child: Text(
+                        "Start meeting",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 10.h),
-              Text("Your video and microphone are turned off by default.",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ScalingTile(
-                    onPressed: () {
-                      _onAudioMutedChanged(!_isAudioMuted);
-                    },
-                    child: SizedBox(
-                      height: 70.h,
-                      width: 70.h,
-                      child: Card(
-                        elevation: 5.0,
-                        color: _isAudioMuted ? Colors.red : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Center(
-                          child: FaIcon(
-                            _isAudioMuted
-                              ? FontAwesomeIcons.microphoneSlash
-                              : FontAwesomeIcons.microphone,
-                            color: _isAudioMuted
-                              ? Colors.white
-                              : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ScalingTile(
-                    onPressed: () {
-                      _onVideoMutedChanged(!_isVideoMuted);
-                    },
-                    child: SizedBox(
-                      height: 70.h,
-                      width: 70.h,
-                      child: Card(
-                        elevation: 5.0,
-                        color: _isVideoMuted ? Colors.red : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Center(
-                          child: FaIcon(
-                            _isVideoMuted
-                                ? FontAwesomeIcons.videoSlash
-                                : FontAwesomeIcons.video,
-                            color: _isVideoMuted
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ScalingTile(
-                    onPressed: () async {
-                      await startRecord(
-                        fileName: widget.claim.claimNumber + '_' + DateTime.now().toIso8601String(),
-                      );
-                      await _joinMeeting();
-                    },
-                    child: SizedBox(
-                      height: 70.h,
-                      width: 180.h,
-                      child: Card(
-                        elevation: 5.0,
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Center(
-                          child: Text("Start meeting",
-                            style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              SizedBox(
-                width: 250.w,
-                child: CheckboxListTile(
-                  value: _isAudioOnly,
-                  title: const Text(
-                    "Audio only mode",
-                  ),
-                  onChanged: (value) {
-                    _onAudioOnlyChanged(value!);
-                  },
-                ),
-              )
             ],
           ),
-        ),
-      ],
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: 250.w,
+            child: CheckboxListTile(
+              value: _isAudioOnly,
+              title: const Text(
+                "Audio only mode",
+              ),
+              onChanged: (value) {
+                _onAudioOnlyChanged(value!);
+              },
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -226,14 +221,14 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     setState(() {
       _status = VideoMeetStatus.terminated;
     });
-    stopRecord();
+    await _screenRecorder!.stopRecord(claim: widget.claim, context: context);
   }
 
-  void _onError(error) {
+  void _onError(error) async {
     setState(() {
       _status = VideoMeetStatus.error;
     });
-    stopRecord();
+    await _screenRecorder!.stopRecord(claim: widget.claim, context: context);
   }
 
   Future<void> _joinMeeting() async {
@@ -248,7 +243,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
       };
       var options = JitsiMeetingOptions(
           room: "${widget.claim.claimID}_${widget.claim.claimNumber}")
-        ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
+        ..serverURL =
+            "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "RC"
         ..userEmail = await AuthenticationProvider.getEmail()
@@ -263,50 +259,12 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
     }
   }
 
+  Future<void> _closeMeeting() async {
+    await JitsiMeet.closeMeeting();
+  }
+
   @override
   bool get wantKeepAlive {
     return true;
   }
-
-  Future<void> startRecord({required String fileName}) async {
-    var response = await edScreenRecorder?.startRecordScreen(
-      fileName: fileName,
-      audioEnable: true,
-    );
-
-    setState(() {
-      _response = response;
-    });
-
-    log(_response.toString());
-  }
-
-  Future<void> stopRecord() async {
-    var response = await edScreenRecorder?.stopRecord();
-    setState(() {
-      _response = response;
-    });
-    log(_response.toString());
-    File _videoFile = _response!['file'];
-    bool _result = await DataUploadRepository()
-        .uploadData(widget.claim.claimNumber, _videoFile);
-
-    if (_result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("File uploaded successfully!"),
-          backgroundColor: Colors.green,
-        ),
-      );
-      _videoFile.delete();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to upload the files."),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
 }
-

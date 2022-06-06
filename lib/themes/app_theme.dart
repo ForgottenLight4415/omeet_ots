@@ -8,7 +8,7 @@ class AppTheme {
 
   static final lightTheme = ThemeData(
     primarySwatch: Colors.deepOrange,
-    scaffoldBackgroundColor: const Color(0xFFEDEADE),
+    scaffoldBackgroundColor: const Color(0xFFEFEFEF),
     appBarTheme: const AppBarTheme(
       centerTitle: true,
     ),

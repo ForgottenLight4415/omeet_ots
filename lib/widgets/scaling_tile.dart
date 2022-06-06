@@ -24,7 +24,7 @@ class _ScalingTileState extends State<ScalingTile>
     super.initState();
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 200),
         lowerBound: 0.0,
         upperBound: 0.1)
       ..addListener(() {

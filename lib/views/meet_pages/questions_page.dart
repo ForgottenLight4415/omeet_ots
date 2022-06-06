@@ -106,66 +106,88 @@ class QuestionCard extends StatefulWidget {
 class _QuestionCardState extends State<QuestionCard> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
-      child: Card(
-        child: Container(
-          margin: EdgeInsets.all(10.w),
-          constraints: BoxConstraints(
-            minHeight: 130.h,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.question.question,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Wrap(
-                alignment: WrapAlignment.center,
-                runAlignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 20.w,
-                runSpacing: 20.h,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        widget.question.setFlag();
-                      });
-                    },
-                    child: Text(widget.question.flag ? "Flagged" : "Flag"),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+            textStyle: MaterialStateProperty.resolveWith(
+                  (states) => TextStyle(
+                    fontSize: 18.sp,
+                    color: Colors.white,
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      widget.question.setAnswer(await _showAnswerInputModal(
-                        context,
-                        widget.question,
-                      ));
-                    },
-                    child: Text(widget.question.getAnswer() == null
-                      ? "Answer"
-                      : "Edit answer",
+            ),
+            padding: MaterialStateProperty.resolveWith(
+                  (states) => EdgeInsets.symmetric(
+                vertical: 15.h,
+                horizontal: 20.w,
+              ),
+            ),
+          )
+        )
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        child: Card(
+          child: Container(
+            margin: EdgeInsets.all(10.w),
+            constraints: BoxConstraints(
+              minHeight: 130.h,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.question.question,
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      color: Colors.black54
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      widget.question.setQuestion(await _editQuestionModal(
-                        context,
-                        widget.question,
-                      ),);
-                      setState(() {});
-                    },
-                    child: const Text("Edit question"),
-                  ),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(height: 20.h),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 20.w,
+                  runSpacing: 20.h,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.question.setFlag();
+                        });
+                      },
+                      child: Text(widget.question.flag ? "Flagged" : "Flag"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        widget.question.setAnswer(await _showAnswerInputModal(
+                          context,
+                          widget.question,
+                        ));
+                      },
+                      child: Text(widget.question.getAnswer() == null
+                        ? "Answer"
+                        : "Edit answer",
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        widget.question.setQuestion(await _editQuestionModal(
+                          context,
+                          widget.question,
+                        ),);
+                        setState(() {});
+                      },
+                      child: const Text("Edit question"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

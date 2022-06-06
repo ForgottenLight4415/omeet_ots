@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:rc_clone/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:rc_clone/data/repositories/auth_repo.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
+import 'package:rc_clone/utilities/screen_recorder.dart';
 import 'package:rc_clone/widgets/claim_options_tile.dart';
 import 'package:rc_clone/widgets/input_fields.dart';
 import 'package:rc_clone/widgets/loading_widget.dart';
@@ -31,8 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   final GetClaimsCubit _claimsCubit = GetClaimsCubit();
 
-  EdScreenRecorder? edScreenRecorder;
-  Map<String, dynamic>? _response;
+  ScreenRecorder? _screenRecorder;
   bool _isRecording = false;
 
   @override
@@ -43,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       _searchQuery = _searchController!.text;
       _claimsCubit.searchClaims(_searchQuery);
     });
-    edScreenRecorder = EdScreenRecorder();
+    _screenRecorder = ScreenRecorder();
   }
 
   @override
@@ -183,15 +178,17 @@ class _HomePageState extends State<HomePage> {
           label: _isRecording ? "Stop recording screen" : "Record Screen",
           onPressed: () async {
             if (!_isRecording) {
-              await startRecord(
-                fileName: claim.claimNumber + '_' + DateTime.now().toIso8601String(),
+              await _screenRecorder!.startRecord(
+                fileName: claim.claimNumber
+                    + '_'
+                    + DateTime.now().toIso8601String(),
               );
               setState(() {
                 _isRecording = true;
               });
               Navigator.pop(context);
             } else {
-              stopRecord(claim);
+              await _screenRecorder!.stopRecord(claim: claim, context: context);
               setState(() {
                 _isRecording = false;
               });
@@ -201,46 +198,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
-  }
-
-  Future<void> startRecord({required String fileName}) async {
-    var response = await edScreenRecorder?.startRecordScreen(
-      fileName: fileName,
-      audioEnable: true,
-    );
-
-    setState(() {
-      _response = response;
-    });
-
-    log(_response.toString());
-  }
-
-  Future<void> stopRecord(Claim claim) async {
-    var response = await edScreenRecorder?.stopRecord();
-    setState(() {
-      _response = response;
-    });
-    log(_response.toString());
-    File _videoFile = _response!['file'];
-    bool _result = await DataUploadRepository()
-        .uploadData(claim.claimNumber, _videoFile);
-
-    if (_result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("File uploaded successfully!"),
-          backgroundColor: Colors.green,
-        ),
-      );
-      _videoFile.delete();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to upload the files."),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 }
