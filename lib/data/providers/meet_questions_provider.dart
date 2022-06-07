@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart';
 import 'package:rc_clone/data/models/question.dart';
@@ -18,7 +17,6 @@ class MeetQuestionsProvider {
         body: jsonEncode(<String, String>{"Claim_No": claimNumber}));
 
     if (_response.statusCode == 200) {
-      log(_response.body);
       Map<String, dynamic> _decodedResponse = jsonDecode(_response.body);
       List<Question> _questions = [];
       _decodedResponse["allpost"].forEach((question) {

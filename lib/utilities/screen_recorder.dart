@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:ed_screen_recorder/ed_screen_recorder.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/repositories/data_upload_repo.dart';
 
@@ -14,9 +15,12 @@ class ScreenRecorder {
   }
 
   Future<Map<String, dynamic>> startRecord({required String fileName}) async {
+    log("Starting screen record");
+    Directory? directory = await getExternalStorageDirectory();
+    Directory? _saveDirectory = await Directory("${directory!.path}/ScreenRecordings").create();
     var response = await _edScreenRecorder!.startRecordScreen(
       fileName: fileName,
-      // dirPathToSave: "/storage/emulated/0/Android/data/com.lightsoftware.omeet/Recordings",
+      dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );
     log(response.toString());
@@ -37,6 +41,7 @@ class ScreenRecorder {
         ),
       );
       _videoFile.delete();
+      log("File deleted");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

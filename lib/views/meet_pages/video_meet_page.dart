@@ -52,14 +52,10 @@ class _VideoMeetPageState extends State<VideoMeetPage>
     JitsiMeet.removeAllListeners();
   }
 
-  ThemeData customTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-        textTheme: Theme.of(context).textTheme.copyWith(
-            bodyText1: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            )
-        )
+  TextStyle customBodyTextOne(BuildContext context) {
+    return Theme.of(context).textTheme.bodyText1!.copyWith(
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
     );
   }
 
@@ -71,30 +67,90 @@ class _VideoMeetPageState extends State<VideoMeetPage>
         child: CircularProgressIndicator(),
       );
     } else if (_status == VideoMeetStatus.inProgress) {
-      return Theme(
-        data: customTheme(context),
-        child: Column(
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "Meeting in progress.\nGo to the meeting screen to end call.",
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          ScalingTile(
+            onPressed: () async {
+              await _closeMeeting();
+            },
+            child: SizedBox(
+              height: 70.h,
+              width: 180.h,
+              child: Card(
+                color: Colors.red,
+                child: Center(
+                  child: Text(
+                    "End meeting",
+                    style: customBodyTextOne(context),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "Tap \"Start meeting\" to join the meet",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline5!.copyWith(
+              fontFamily: 'Open Sans',
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Text(
+          "Your video and microphone are turned off by default.",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+        SizedBox(height: 20.h),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Meeting in progress.\nGo to the meeting screen to end call.",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
+            VideoMeetToggleButton(
+              toggleParameter: _isAudioMuted,
+              primaryFaIcon: FontAwesomeIcons.microphoneSlash,
+              secondaryFaIcon: FontAwesomeIcons.microphone,
+              onPressed: () {
+                _onAudioMutedChanged(!_isAudioMuted);
+              },
+            ),
+            VideoMeetToggleButton(
+              toggleParameter: _isVideoMuted,
+              primaryFaIcon: FontAwesomeIcons.videoSlash,
+              secondaryFaIcon: FontAwesomeIcons.video,
+              onPressed: () {
+                _onVideoMutedChanged(!_isVideoMuted);
+              },
             ),
             ScalingTile(
               onPressed: () async {
-                await _closeMeeting();
+                await _screenRecorder!.startRecord(
+                  fileName: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
+                );
+                await _joinMeeting();
               },
               child: SizedBox(
                 height: 70.h,
                 width: 180.h,
                 child: Card(
-                  color: Colors.red,
+                  color: Colors.green,
                   child: Center(
                     child: Text(
-                      "End meeting",
-                      style: Theme.of(context).textTheme.bodyText1,
+                      "Start meeting",
+                      style: customBodyTextOne(context),
                     ),
                   ),
                 ),
@@ -102,88 +158,20 @@ class _VideoMeetPageState extends State<VideoMeetPage>
             ),
           ],
         ),
-      );
-    }
-    return Theme(
-      data: customTheme(context),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Tap \"Start meeting\" to join the meet",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline5!.copyWith(
-                fontFamily: 'Open Sans',
+        SizedBox(height: 8.h),
+        SizedBox(
+          width: 250.w,
+          child: CheckboxListTile(
+            value: _isAudioOnly,
+            title: const Text(
+              "Audio only mode",
             ),
+            onChanged: (value) {
+              _onAudioOnlyChanged(value!);
+            },
           ),
-          SizedBox(height: 10.h),
-          Text(
-            "Your video and microphone are turned off by default.",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-          SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              VideoMeetToggleButton(
-                toggleParameter: _isAudioMuted,
-                primaryFaIcon: FontAwesomeIcons.microphoneSlash,
-                secondaryFaIcon: FontAwesomeIcons.microphone,
-                onPressed: () {
-                  _onAudioMutedChanged(!_isAudioMuted);
-                },
-              ),
-              VideoMeetToggleButton(
-                toggleParameter: _isVideoMuted,
-                primaryFaIcon: FontAwesomeIcons.videoSlash,
-                secondaryFaIcon: FontAwesomeIcons.video,
-                onPressed: () {
-                  _onVideoMutedChanged(!_isVideoMuted);
-                },
-              ),
-              ScalingTile(
-                onPressed: () async {
-                  await _screenRecorder!.startRecord(
-                    fileName: widget.claim.claimNumber +
-                        '_' +
-                        DateTime.now().toIso8601String(),
-                  );
-                  await _joinMeeting();
-                },
-                child: SizedBox(
-                  height: 70.h,
-                  width: 180.h,
-                  child: Card(
-                    color: Colors.green,
-                    child: Center(
-                      child: Text(
-                        "Start meeting",
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: 250.w,
-            child: CheckboxListTile(
-              value: _isAudioOnly,
-              title: const Text(
-                "Audio only mode",
-              ),
-              onChanged: (value) {
-                _onAudioOnlyChanged(value!);
-              },
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 

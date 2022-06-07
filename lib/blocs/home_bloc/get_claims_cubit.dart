@@ -33,8 +33,9 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
     }
     try {
       List<Claim> _result = [];
+      String _searchQuery = searchQuery.trim().toLowerCase();
       for (var claim in _claims) {
-        if (claim.claimNumber.toString() == searchQuery.trim()) {
+        if (claim.claimNumber.toString().toLowerCase().contains(_searchQuery)) {
           _result.add(claim);
         }
       }
