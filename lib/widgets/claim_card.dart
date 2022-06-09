@@ -28,7 +28,7 @@ class ClaimCard extends StatelessWidget {
               softWrap: false,
               style: Theme.of(context).textTheme.headline2!.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: Colors.deepOrange,
+                  color: Theme.of(context).primaryColor,
                   overflow: TextOverflow.fade),
             ),
             SizedBox(height: 10.h),

@@ -58,23 +58,35 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Record Audio"),
+        title: const Text("Record audio"),
       ),
       body: Padding(
         padding: EdgeInsets.all(10.w),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Text(widget.claim.claimNumber,
+              SizedBox(height: 30.h),
+              Text(
+                "Claim number",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Text(
+                widget.claim.claimNumber,
                 style: TextStyle(
                   fontSize: 35.sp,
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.w600
                 ),
               ),
-              AudioTimer(duration: _duration),
-              _recorderButton()
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 50.h),
+                child: AudioTimer(duration: _duration),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 30.h),
+                child: _recorderButton(),
+              )
             ],
           ),
         ),
@@ -127,9 +139,9 @@ class _AudioTimerState extends State<AudioTimer> {
       child: Container(
         height: 300.h,
         width: 300.h,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.deepOrange
+          color: Theme.of(context).primaryColor
         ),
         child: Center(
           child: _buildTime(),

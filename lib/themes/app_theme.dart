@@ -7,7 +7,7 @@ class AppTheme {
   static final BorderRadius _borderRadius = BorderRadius.circular(14.r);
 
   static final lightTheme = ThemeData(
-    primarySwatch: Colors.deepOrange,
+    primarySwatch: Colors.red,
     scaffoldBackgroundColor: const Color(0xFFEFEFEF),
     appBarTheme: const AppBarTheme(
       centerTitle: true,
@@ -47,19 +47,17 @@ class AppTheme {
           (states) => TextStyle(fontSize: 20.sp, color: Colors.white),
         ),
         padding: MaterialStateProperty.resolveWith(
-          (states) => EdgeInsets.symmetric(
-            vertical: 15.h,
-            horizontal: 25.w,
-          ),
+          (states) => EdgeInsets.symmetric(vertical: 15.h, horizontal: 25.w),
         ),
         shape: MaterialStateProperty.resolveWith(
-          (states) =>
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+          (states) => RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
         ),
+        elevation: MaterialStateProperty.resolveWith((states) => 5.0),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: EdgeInsets.zero,
       fillColor: Colors.white,
       filled: true,
       border: UnderlineInputBorder(

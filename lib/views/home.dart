@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     SizedBox(height: 100.h),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 16.0),
+                      padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 16.h),
                       child: SizedBox(
                         height: 50.h,
                         width: double.infinity,

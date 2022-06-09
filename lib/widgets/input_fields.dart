@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final Color borderColor;
   final bool obscureText;
+  final void Function(String)? onFieldSubmitted;
 
   const CustomTextFormField(
       {Key? key,
@@ -22,7 +23,8 @@ class CustomTextFormField extends StatelessWidget {
       required this.label,
       required this.hintText,
       this.borderColor = Colors.transparent,
-      this.obscureText = false})
+      this.obscureText = false,
+      this.onFieldSubmitted})
       : super(key: key);
 
   @override
@@ -31,7 +33,6 @@ class CustomTextFormField extends StatelessWidget {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
-        padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14.r),
             border: Border.all(color: borderColor, width: 2)
@@ -47,6 +48,7 @@ class CustomTextFormField extends StatelessWidget {
           textInputAction: textInputAction,
           validator: validator,
           obscureText: obscureText,
+          onFieldSubmitted: onFieldSubmitted,
         ),
       ),
     );

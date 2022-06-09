@@ -19,10 +19,14 @@ class ClaimPageTiles extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: ListTile(
-        leading: FaIcon(faIcon, color: Colors.deepOrange, size: 30.w),
+        leading: FaIcon(
+          faIcon,
+          color: Theme.of(context).primaryColor,
+          size: 32.w,
+        ),
         title: Text(
           label,
-          style: TextStyle(fontSize: 20.sp),
+          style: Theme.of(context).textTheme.bodyText1,
         ),
       ),
     );
