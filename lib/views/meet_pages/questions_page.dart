@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/questions_bloc.dart';
+import 'package:rc_clone/blocs/meet_page_bloc/questions_bloc/questions_bloc.dart';
 import 'package:rc_clone/widgets/question_card.dart';
 
 class QuestionsPage extends StatefulWidget {
@@ -30,7 +28,6 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
   }
 
   Future<void> _scrollDown() async {
-    log("Scroll triggerred.");
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
       duration: const Duration(milliseconds: 400),

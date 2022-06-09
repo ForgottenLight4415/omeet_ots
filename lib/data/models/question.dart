@@ -23,7 +23,7 @@ class Question {
     return _answer;
   }
 
-  void setFlag() {
+  void toggleFlag() {
     flag = !flag;
   }
 

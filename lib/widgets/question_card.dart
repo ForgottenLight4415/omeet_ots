@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rc_clone/blocs/meet_page_bloc/modify_question_bloc/modify_question_bloc.dart';
 import 'package:rc_clone/data/models/question.dart';
 
 class QuestionCard extends StatefulWidget {
@@ -18,26 +20,25 @@ class _QuestionCardState extends State<QuestionCard> {
       data: Theme.of(context).copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-            textStyle: MaterialStateProperty.resolveWith(
+                textStyle: MaterialStateProperty.resolveWith(
                   (states) => TextStyle(
-                fontSize: 18.sp,
-                color: Colors.white,
-              ),
-            ),
-            padding: MaterialStateProperty.resolveWith(
+                    fontSize: 18.sp,
+                    color: Colors.white,
+                  ),
+                ),
+                padding: MaterialStateProperty.resolveWith(
                   (states) => EdgeInsets.symmetric(
-                vertical: 15.h,
-                horizontal: 20.w,
+                    vertical: 15.h,
+                    horizontal: 20.w,
+                  ),
+                ),
               ),
-            ),
-          ),
         ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.w),
         child: Card(
           child: Container(
-            // margin: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor.withAlpha(25),
               borderRadius: BorderRadius.circular(14.r),
@@ -47,64 +48,80 @@ class _QuestionCardState extends State<QuestionCard> {
             ),
             child: Padding(
               padding: EdgeInsets.all(12.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      widget.question.question,
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(color: Colors.black87),
-                    ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    runAlignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 20.w,
-                    runSpacing: 20.h,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.question.setFlag();
-                          });
-                        },
-                        child: Text(widget.question.flag ? "Flagged" : "Flag"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          widget.question.setAnswer(await _showAnswerInputModal(
-                            context,
-                            widget.question,
-                          ));
-                        },
-                        child: Text(
-                          widget.question.getAnswer() == null
-                              ? "Answer"
-                              : "Edit answer",
+              child: BlocProvider<ModifyQuestionBloc>(
+                create: (context) =>
+                    ModifyQuestionBloc(question: widget.question),
+                child: BlocBuilder<ModifyQuestionBloc, ModifyQuestionState>(
+                  builder: (context, state) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            state.question.question,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: Colors.black87),
+                          ),
                         ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          widget.question.setQuestion(
-                            await _editQuestionModal(
-                              context,
-                              widget.question,
+                        SizedBox(height: 20.h),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 20.w,
+                          runSpacing: 20.h,
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(ToggleFlag());
+                              },
+                              child: Text(state.question.flag
+                                  ? "Flagged"
+                                  : "Flag",
+                              ),
                             ),
-                          );
-                          setState(() {});
-                        },
-                        child: const Text("Edit question"),
-                      ),
-                    ],
-                  ),
-                ],
+                            ElevatedButton(
+                              onPressed: () async {
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(AnswerQuestion(
+                                      answer: await _showAnswerInputModal(
+                                        context,
+                                        state.question,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                state.question.getAnswer() == null
+                                    ? "Answer"
+                                    : "Edit answer",
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                BlocProvider.of<ModifyQuestionBloc>(context)
+                                    .add(
+                                  ModifyQuestion(
+                                    question: await _editQuestionModal(
+                                      context,
+                                      state.question,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text("Edit question"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -115,7 +132,8 @@ class _QuestionCardState extends State<QuestionCard> {
 
   Future<String?> _showAnswerInputModal(
       BuildContext context, Question question) async {
-    final TextEditingController _controller = TextEditingController(text: question.getAnswer());
+    final TextEditingController _controller =
+        TextEditingController(text: question.getAnswer());
     final String? _answer = await showModalBottomSheet<String?>(
       context: context,
       isScrollControlled: true,
@@ -149,7 +167,7 @@ class _QuestionCardState extends State<QuestionCard> {
                     controller: _controller,
                     maxLines: 10,
                     decoration:
-                    const InputDecoration(hintText: "Write an answer"),
+                        const InputDecoration(hintText: "Write an answer"),
                   ),
                   const Spacer(),
                   Align(
@@ -174,7 +192,7 @@ class _QuestionCardState extends State<QuestionCard> {
   Future<String?> _editQuestionModal(
       BuildContext context, Question question) async {
     final TextEditingController _controller =
-    TextEditingController(text: question.question);
+        TextEditingController(text: question.question);
     final String? _question = await showModalBottomSheet<String?>(
       context: context,
       isScrollControlled: true,
@@ -203,7 +221,7 @@ class _QuestionCardState extends State<QuestionCard> {
                     controller: _controller,
                     maxLines: 10,
                     decoration:
-                    const InputDecoration(hintText: "Write a question"),
+                        const InputDecoration(hintText: "Write a question"),
                   ),
                   const Spacer(),
                   Row(
