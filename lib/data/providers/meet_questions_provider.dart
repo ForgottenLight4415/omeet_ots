@@ -18,11 +18,12 @@ class MeetQuestionsProvider {
 
     if (_response.statusCode == 200) {
       Map<String, dynamic> _decodedResponse = jsonDecode(_response.body);
+      List _decodedQuestions = _decodedResponse["allpost"];
       List<Question> _questions = [];
-      _decodedResponse["allpost"].forEach((question) {
-        _questions.add(Question.fromJson(question));
-      });
-
+      for (int i = 0; i < _decodedQuestions.length; i++) {
+        _decodedQuestions[i]['id'] = i.toString();
+        _questions.add(Question.fromJson(_decodedQuestions[i]));
+      }
       return _questions;
     } else {
       throw ServerException(
