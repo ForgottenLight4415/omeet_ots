@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rc_clone/blocs/home_bloc/get_claims_cubit.dart';
 import 'package:rc_clone/data/repositories/auth_repo.dart';
 import 'package:rc_clone/utilities/app_permission_manager.dart';
+import 'package:rc_clone/utilities/camera_utility.dart';
 import 'package:rc_clone/utilities/screen_recorder.dart';
 import 'package:rc_clone/widgets/claim_options_tile.dart';
 import 'package:rc_clone/widgets/input_fields.dart';
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
               stretch: true,
               floating: true,
               pinned: true,
-              snap: false,
+              snap: true,
               expandedHeight: 145.h,
               backgroundColor: Colors.white,
               foregroundColor: Colors.black87,
@@ -84,21 +86,15 @@ class _HomePageState extends State<HomePage> {
               ),
               centerTitle: false,
               flexibleSpace: FlexibleSpaceBar(
-                background: Column(
-                  children: <Widget>[
-                    SizedBox(height: 100.h),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 6.h, 16.w, 16.h),
-                      child: SizedBox(
-                        height: 50.h,
-                        width: double.infinity,
-                        child: SearchField(
-                          textEditingController: _searchController,
-                          hintText: "Search claims",
-                        ),
-                      ),
+                background: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: SearchField(
+                      textEditingController: _searchController,
+                      hintText: "Search claims",
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -181,9 +177,78 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         ClaimPageTiles(
+          faIcon: FontAwesomeIcons.camera,
+          label: "Capture image",
+          onPressed: () async {
+            bool cameraStatus = await cameraPermission();
+            bool microphoneStatus = await microphonePermission();
+            bool storageStatus = await storagePermission();
+            Navigator.pop(context);
+            if (cameraStatus && microphoneStatus && storageStatus) {
+              WidgetsFlutterBinding.ensureInitialized();
+              List<CameraDescription>? _cameras;
+              try {
+                _cameras = await availableCameras();
+                Navigator.pushNamed(
+                  context, '/capture/image',
+                  arguments: CameraCaptureArguments(_cameras, claim),
+                );
+              } on CameraException catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Failed to determine available cameras. (${e.description})",
+                    ),
+                  ),
+                );
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Camera, microphone and storage permission is required to access this feature.",
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+        ClaimPageTiles(
           faIcon: FontAwesomeIcons.film,
           label: "Record video",
-          onPressed: () {},
+          onPressed: () async {
+            bool cameraStatus = await cameraPermission();
+            bool microphoneStatus = await microphonePermission();
+            bool storageStatus = await storagePermission();
+            Navigator.pop(context);
+            if (cameraStatus && microphoneStatus && storageStatus) {
+              WidgetsFlutterBinding.ensureInitialized();
+              List<CameraDescription>? _cameras;
+              try {
+                _cameras = await availableCameras();
+                Navigator.pushNamed(
+                  context, '/record/video',
+                  arguments: CameraCaptureArguments(_cameras, claim),
+                );
+              } on CameraException catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Failed to determine available cameras. (${e.description})",
+                    ),
+                  ),
+                );
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Camera, microphone and storage permission is required to access this feature.",
+                  ),
+                ),
+              );
+            }
+          },
         ),
         ClaimPageTiles(
           faIcon: FontAwesomeIcons.video,
@@ -216,15 +281,17 @@ class _HomePageState extends State<HomePage> {
             if (microphoneStatus && storageStatus) {
               if (!_isRecording) {
                 await _screenRecorder!.startRecord(
-                  fileName:
-                  claim.claimNumber + '_' + DateTime.now().toIso8601String(),
+                  fileName: claim.claimNumber +
+                      '_' +
+                      DateTime.now().toIso8601String(),
                 );
                 setState(() {
                   _isRecording = true;
                 });
                 Navigator.pop(context);
               } else {
-                await _screenRecorder!.stopRecord(claim: claim, context: context);
+                await _screenRecorder!
+                    .stopRecord(claim: claim, context: context);
                 setState(() {
                   _isRecording = false;
                 });

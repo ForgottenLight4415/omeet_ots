@@ -24,9 +24,9 @@ class ClaimCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              "Claim ID: ${claim.claimNumber}",
+             claim.claimNumber,
               softWrap: false,
-              style: Theme.of(context).textTheme.headline2!.copyWith(
+              style: Theme.of(context).textTheme.headline3!.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).primaryColor,
                   overflow: TextOverflow.fade,
