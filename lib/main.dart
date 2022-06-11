@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 
     return ScreenUtilInit(
       designSize: const Size(412, 915),
-      builder: () => MaterialApp(
+      builder: (BuildContext context, Widget? child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'OMeet',
         theme: AppTheme.lightTheme,

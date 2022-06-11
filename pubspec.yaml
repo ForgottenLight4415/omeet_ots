@@ -24,7 +24,11 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   http: ^0.13.4
-  jitsi_meet: ^4.0.0
+#  jitsi_meet: ^4.0.0
+  jitsi_meet:
+    git:
+      url: https://github.com/dispersik/jitsi_meet_fork
+      ref: master
   flutter_bloc: ^8.0.1
   url_launcher: ^6.0.20
   maps_launcher: ^2.0.1
@@ -37,6 +41,8 @@ dependencies:
   flutter_sound_lite: ^8.5.0
   permission_handler: ^9.2.0
   path_provider: ^2.0.11
+  video_player: ^2.4.4
+  camera: ^0.9.8
 
 dev_dependencies:
   flutter_test:
@@ -45,9 +51,7 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter:
-
   uses-material-design: true
-
   assets:
     - images/
 

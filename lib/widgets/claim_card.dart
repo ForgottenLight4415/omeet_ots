@@ -29,7 +29,8 @@ class ClaimCard extends StatelessWidget {
               style: Theme.of(context).textTheme.headline2!.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).primaryColor,
-                  overflow: TextOverflow.fade),
+                  overflow: TextOverflow.fade,
+              ),
             ),
             SizedBox(height: 10.h),
             Column(
@@ -75,7 +76,7 @@ class ClaimCard extends StatelessWidget {
                           onPressed: () async {
                             String? _selectedPhone;
                             if (claim.insuredAltContactNumber !=
-                                "Unavailable") {
+                                _unavailable) {
                               await showModalBottomSheet(
                                 context: context,
                                 constraints: BoxConstraints(
@@ -148,7 +149,7 @@ class ClaimCard extends StatelessWidget {
                       onPressed: () async {
                         final Uri _launchUri =
                             Uri(scheme: 'mailto', path: claim.email);
-                        await launch(_launchUri.toString());
+                        await launchUrl(_launchUri);
                       },
                       child: const Icon(Icons.mail),
                     ),
