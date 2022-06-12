@@ -1,17 +1,17 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/utilities/camera_utility.dart';
-import 'package:rc_clone/views/audio_record_page.dart';
 import 'dart:io';
 
-import 'package:rc_clone/views/home.dart';
-import 'package:rc_clone/views/image_capture.dart';
-import 'package:rc_clone/views/invalid_route.dart';
-import 'package:rc_clone/views/login.dart';
-import 'package:rc_clone/views/meeting_page.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import '../views/video_record.dart';
+import '../data/models/claim.dart';
+import '../utilities/camera_utility.dart';
+import '../views/login.dart';
+import '../views/home.dart';
+import '../views/invalid_route.dart';
+import '../views/meet_pages/meet_main.dart';
+import '../views/recorder_pages/audio_record.dart';
+import '../views/recorder_pages/image_capture.dart';
+import '../views/recorder_pages/video_record.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -23,20 +23,20 @@ class RouteGenerator {
       case '/login':
         return _platformDependentRouting(const SignInPage());
 
+      // MEETING ROUTES
       case '/claim/meeting':
         final Claim _claim = args as Claim;
         return _platformDependentRouting(MeetingMainPage(claim: _claim));
 
+      // RECORDER ROUTES
       case '/record/audio':
-        final Claim _claim = args as Claim;
-        return _platformDependentRouting(AudioRecordPage(claim: _claim));
-
+        final AudioRecordArguments _audioRecArguments = args as AudioRecordArguments;
+        return _platformDependentRouting(AudioRecordPage(arguments: _audioRecArguments));
       case '/record/video':
         final CameraCaptureArguments _videoRecArgs = args as CameraCaptureArguments;
         return _platformDependentRouting(
           VideoRecordPage(arguments: _videoRecArgs),
         );
-
       case '/capture/image':
         final CameraCaptureArguments _captureImageArgs = args as CameraCaptureArguments;
         return _platformDependentRouting(

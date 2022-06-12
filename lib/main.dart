@@ -8,15 +8,14 @@ import 'package:rc_clone/themes/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final bool _isSignedIn = await AuthRepository().signIn();
-  runApp(MyApp(isSignedIn: _isSignedIn));
+  runApp(OMeetApp(isSignedIn: _isSignedIn));
 }
 
-class MyApp extends StatelessWidget {
+class OMeetApp extends StatelessWidget {
   final bool isSignedIn;
 
-  const MyApp({Key? key, required this.isSignedIn}) : super(key: key);
+  const OMeetApp({Key? key, required this.isSignedIn}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([

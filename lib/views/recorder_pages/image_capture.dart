@@ -4,24 +4,24 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:location/location.dart';
+import 'package:rc_clone/utilities/camera_utility.dart';
 
-import '../data/repositories/data_upload_repo.dart';
-import '../utilities/camera_utility.dart';
+import '../../data/repositories/data_upload_repo.dart';
 
-class VideoRecordPage extends StatefulWidget {
+class CaptureImagePage extends StatefulWidget {
   final CameraCaptureArguments arguments;
 
-  const VideoRecordPage({Key? key, required this.arguments}) : super(key: key);
+  const CaptureImagePage({Key? key, required this.arguments}) : super(key: key);
 
   @override
-  State<VideoRecordPage> createState() => _VideoRecordPageState();
+  State<CaptureImagePage> createState() => _CaptureImagePageState();
 }
 
-class _VideoRecordPageState extends State<VideoRecordPage>
+class _CaptureImagePageState extends State<CaptureImagePage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
-  XFile? videoFile;
-  bool enableAudio = true;
+  XFile? imageFile;
   double _minAvailableExposureOffset = 0.0;
   double _maxAvailableExposureOffset = 0.0;
   double _currentExposureOffset = 0.0;
@@ -73,7 +73,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   @override
   void dispose() {
     _ambiguate(WidgetsBinding.instance)?.removeObserver(this);
-    controller!.dispose();
+    controller?.dispose();
     _flashModeControlRowAnimationController.dispose();
     _exposureModeControlRowAnimationController.dispose();
     _focusModeControlRowAnimationController.dispose();
@@ -102,7 +102,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Record video'),
+        title: const Text('Capture image'),
       ),
       body: Column(
         children: <Widget>[
@@ -217,11 +217,6 @@ class _VideoRecordPageState extends State<VideoRecordPage>
               color: Colors.red,
               onPressed:
               controller != null ? onFocusModeButtonPressed : null,
-            ),
-            IconButton(
-              icon: Icon(enableAudio ? Icons.volume_up : Icons.volume_mute),
-              color: Colors.red,
-              onPressed: controller != null ? onAudioModeButtonPressed : null,
             ),
           ],
         ),
@@ -426,43 +421,14 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   Widget _captureControlRowWidget() {
     final CameraController? cameraController = controller;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.videocam),
-          color: Colors.red,
-          onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              !cameraController.value.isRecordingVideo
-              ? onVideoRecordButtonPressed
-              : null,
-        ),
-        IconButton(
-          icon: cameraController != null &&
-              cameraController.value.isRecordingPaused
-              ? const Icon(Icons.play_arrow)
-              : const Icon(Icons.pause),
-          color: Colors.red,
-          onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              cameraController.value.isRecordingVideo
-              ? (cameraController.value.isRecordingPaused)
-              ? onResumeButtonPressed
-              : onPauseButtonPressed
-              : null,
-        ),
-        IconButton(
-          icon: const Icon(Icons.stop),
-          color: Colors.red,
-          onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              cameraController.value.isRecordingVideo
-              ? onStopButtonPressed
-              : null,
-        ),
-      ],
+    return IconButton(
+      icon: const Icon(Icons.camera_alt),
+      color: Colors.red,
+      onPressed: cameraController != null &&
+          cameraController.value.isInitialized &&
+          !cameraController.value.isRecordingVideo
+          ? onTakePictureButtonPressed
+          : null,
     );
   }
 
@@ -474,7 +440,6 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (description == null) {
         return;
       }
-
       onNewCameraSelected(description);
     }
 
@@ -542,7 +507,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     final CameraController cameraController = CameraController(
       cameraDescription,
       ResolutionPreset.medium,
-      enableAudio: enableAudio,
+      enableAudio: false,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
@@ -613,6 +578,44 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     }
   }
 
+  void onTakePictureButtonPressed() {
+    takePicture().then((XFile? file) async {
+      if (mounted) {
+        setState(() {
+          imageFile = file;
+        });
+        if (file != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Starting upload"),
+              backgroundColor: Colors.green,
+            ),
+          );
+          File _imageFile = File(imageFile!.path);
+          LocationData _locationData = widget.arguments.locationData;
+          bool _result = await DataUploadRepository().uploadData(
+            widget.arguments.claim.claimNumber,
+            _locationData.latitude ?? 0,
+            _locationData.longitude ?? 0,
+            _imageFile,
+          );
+          if (_result) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("File uploaded successfully!"),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            _imageFile.delete();
+            log("File deleted");
+            showInSnackBar('Picture saved to ${file.path}');
+          }
+        }
+      }
+    });
+  }
+
   void onFlashModeButtonPressed() {
     if (_flashModeControlRowAnimationController.value == 1) {
       _flashModeControlRowAnimationController.reverse();
@@ -643,13 +646,6 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     }
   }
 
-  void onAudioModeButtonPressed() {
-    enableAudio = !enableAudio;
-    if (controller != null) {
-      onNewCameraSelected(controller!.description);
-    }
-  }
-
   void onSetFlashModeButtonPressed(FlashMode mode) {
     setFlashMode(mode).then((_) {
       if (mounted) {
@@ -675,129 +671,6 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       }
       showInSnackBar('Focus mode set to ${mode.toString().split('.').last}');
     });
-  }
-
-  void onVideoRecordButtonPressed() {
-    startVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  void onStopButtonPressed() {
-    stopVideoRecording().then((XFile? file) async {
-      if (mounted) {
-        setState(() {});
-      }
-      if (file != null) {
-        videoFile = file;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Starting upload"),
-            backgroundColor: Colors.green,
-          ),
-        );
-        File _videoFile = File(videoFile!.path);
-        bool _result = await DataUploadRepository()
-            .uploadData(widget.arguments.claim.claimNumber, _videoFile);
-        if (_result) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("File uploaded successfully!"),
-              backgroundColor: Colors.green,
-            ),
-          );
-
-          _videoFile.delete();
-          log("File deleted");
-        }
-      }
-    });
-  }
-
-  void onPauseButtonPressed() {
-    pauseVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-      showInSnackBar('Video recording paused');
-    });
-  }
-
-  void onResumeButtonPressed() {
-    resumeVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-      showInSnackBar('Video recording resumed');
-    });
-  }
-
-  Future<void> startVideoRecording() async {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
-      return;
-    }
-
-    if (cameraController.value.isRecordingVideo) {
-      // A recording is already started, do nothing.
-      return;
-    }
-
-    try {
-      await cameraController.startVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return;
-    }
-  }
-
-  Future<XFile?> stopVideoRecording() async {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      return cameraController.stopVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-  }
-
-  Future<void> pauseVideoRecording() async {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isRecordingVideo) {
-      return;
-    }
-
-    try {
-      await cameraController.pauseVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
-  }
-
-  Future<void> resumeVideoRecording() async {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isRecordingVideo) {
-      return;
-    }
-
-    try {
-      await cameraController.resumeVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
   }
 
   Future<void> setFlashMode(FlashMode mode) async {
@@ -852,6 +725,27 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     } on CameraException catch (e) {
       _showCameraException(e);
       rethrow;
+    }
+  }
+
+  Future<XFile?> takePicture() async {
+    final CameraController? cameraController = controller;
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      showInSnackBar('Error: select a camera first.');
+      return null;
+    }
+
+    if (cameraController.value.isTakingPicture) {
+      // A capture is already pending, do nothing.
+      return null;
+    }
+
+    try {
+      final XFile file = await cameraController.takePicture();
+      return file;
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
     }
   }
 

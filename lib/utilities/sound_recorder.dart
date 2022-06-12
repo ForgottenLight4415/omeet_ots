@@ -41,12 +41,12 @@ class SoundRecorder {
     );
   }
 
-  Future<void> _stop(BuildContext context) async {
+  Future<void> _stop(BuildContext context, double latitude, double longitude) async {
     if (!_isRecorderInitialized) return;
     String? _path = await _audioRecorder!.stopRecorder();
     File _audioFile = File(_path!);
     bool _result = await DataUploadRepository()
-        .uploadData(claim.claimNumber, _audioFile);
+        .uploadData(claim.claimNumber, latitude, longitude, _audioFile);
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -66,11 +66,11 @@ class SoundRecorder {
     }
   }
 
-  Future<void> toggleRecording(BuildContext context) async {
+  Future<void> toggleRecording(BuildContext context, double latitude, double longitude) async {
     if (_audioRecorder!.isStopped) {
       await _record();
     } else {
-      await _stop(context);
+      await _stop(context, latitude, longitude);
     }
   }
 }

@@ -31,8 +31,9 @@ class ScreenRecorder {
     var response = await _edScreenRecorder?.stopRecord();
     log(response.toString());
     File _videoFile = response!['file'];
+
     bool _result = await DataUploadRepository()
-        .uploadData(claim.claimNumber, _videoFile);
+        .uploadData(claim.claimNumber, 0, 0, _videoFile);
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

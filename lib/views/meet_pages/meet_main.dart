@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/views/meet_pages/meeting_details.dart';
-import 'package:rc_clone/views/meet_pages/meet_documents.dart';
-import 'package:rc_clone/views/meet_pages/questions_page.dart';
-import 'package:rc_clone/views/meet_pages/video_meet_page.dart';
+import 'package:rc_clone/views/meet_pages/details_section.dart';
+import 'package:rc_clone/views/meet_pages/documents_section.dart';
+import 'package:rc_clone/views/meet_pages/questions_section.dart';
+import 'package:rc_clone/views/meet_pages/meet_section.dart';
 
 class MeetingMainPage extends StatefulWidget {
   final Claim claim;

@@ -2,13 +2,21 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/utilities/sound_recorder.dart';
 
-class AudioRecordPage extends StatefulWidget {
+class AudioRecordArguments {
   final Claim claim;
-  const AudioRecordPage({Key? key, required this.claim}) : super(key: key);
+  final LocationData locationData;
+
+  const AudioRecordArguments(this.claim, this.locationData);
+}
+
+class AudioRecordPage extends StatefulWidget {
+  final AudioRecordArguments arguments;
+  const AudioRecordPage({Key? key, required this.arguments}) : super(key: key);
 
   @override
   State<AudioRecordPage> createState() => _AudioRecordPageState();
@@ -22,7 +30,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
   @override
   void initState() {
     super.initState();
-    _recorder = SoundRecorder(widget.claim);
+    _recorder = SoundRecorder(widget.arguments.claim);
     _recorder!.init();
   }
 
@@ -72,7 +80,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
                 style: Theme.of(context).textTheme.headline6,
               ),
               Text(
-                widget.claim.claimNumber,
+                widget.arguments.claim.claimNumber,
                 style: TextStyle(
                   fontSize: 35.sp,
                   color: Theme.of(context).primaryColor,
@@ -102,7 +110,12 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
 
     return ElevatedButton.icon(
       onPressed: () async {
-        await _recorder!.toggleRecording(context);
+        LocationData _locationData = widget.arguments.locationData;
+        await _recorder!.toggleRecording(
+          context,
+          _locationData.latitude ?? 0,
+          _locationData.longitude ?? 0,
+        );
         if (!_isRecording) {
           _resetTimer();
           _startTimer();

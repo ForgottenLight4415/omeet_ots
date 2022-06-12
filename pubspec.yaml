@@ -22,26 +22,26 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
   http: ^0.13.4
-#  jitsi_meet: ^4.0.0
+  camera: ^0.9.8
+  location: ^4.4.0
+  flutter_svg: ^1.0.3
+  flutter_bloc: ^8.0.1
+  maps_launcher: ^2.0.1
+  url_launcher: ^6.0.20
+  path_provider: ^2.0.11
+  cupertino_icons: ^1.0.2
+  flutter_sound_lite: ^8.5.0
+  permission_handler: ^9.2.0
+  shared_preferences: ^2.0.8
+  ed_screen_recorder: ^0.0.10
+  flutter_screenutil: ^5.0.0+2
+  font_awesome_flutter: ^9.2.0
+  simple_connection_checker: ^0.2.1
   jitsi_meet:
     git:
       url: https://github.com/dispersik/jitsi_meet_fork
       ref: master
-  flutter_bloc: ^8.0.1
-  url_launcher: ^6.0.20
-  maps_launcher: ^2.0.1
-  shared_preferences: ^2.0.8
-  flutter_screenutil: ^5.0.0+2
-  font_awesome_flutter: ^9.2.0
-  simple_connection_checker: ^0.2.1
-  flutter_svg: ^1.0.3
-  ed_screen_recorder: ^0.0.10
-  flutter_sound_lite: ^8.5.0
-  permission_handler: ^9.2.0
-  path_provider: ^2.0.11
-  camera: ^0.9.8
 
 dev_dependencies:
   flutter_test:
