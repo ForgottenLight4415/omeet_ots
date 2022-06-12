@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/blocs/meet_page_bloc/questions_bloc/questions_bloc.dart';
+import 'package:rc_clone/blocs/meet_page_bloc/submit_question_cubit/submit_question_cubit.dart';
+import 'package:rc_clone/utilities/show_snackbars.dart';
 import 'package:rc_clone/widgets/question_card.dart';
 
 class QuestionsPage extends StatefulWidget {
@@ -13,7 +15,8 @@ class QuestionsPage extends StatefulWidget {
   State<QuestionsPage> createState() => _QuestionsPageState();
 }
 
-class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveClientMixin<QuestionsPage> {
+class _QuestionsPageState extends State<QuestionsPage>
+    with AutomaticKeepAliveClientMixin<QuestionsPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -74,9 +77,9 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
                         child: ElevatedButton(
                           onPressed: () async {
                             BlocProvider.of<QuestionsBloc>(context).add(
-                                AddQuestionEvent(
-                                  question: await _addQuestionModal(context),
-                                ),
+                              AddQuestionEvent(
+                                question: await _addQuestionModal(context),
+                              ),
                             );
                           },
                           child: const Text("Add question"),
@@ -93,17 +96,49 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Answer submit functionality
-                          },
-                          child: const Text("Submit"),
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.resolveWith(
-                              (states) => EdgeInsets.symmetric(
-                                vertical: 20.h,
-                              ),
-                            ),
+                        child: BlocProvider<SubmitQuestionCubit>(
+                          create: (context) => SubmitQuestionCubit(),
+                          child: BlocConsumer<SubmitQuestionCubit,
+                              SubmitQuestionState>(
+                            listener: (context, submitState) {
+                              if (submitState is SubmitQuestionReady) {
+                                showInfoSnackBar(
+                                    context, "Answers submitted successfully.",
+                                    color: Colors.green);
+                              } else if (submitState is SubmitQuestionFailed) {
+                                showInfoSnackBar(context,
+                                    "Failed to submit answers. (${submitState.cause})",
+                                    color: Colors.red);
+                              }
+                            },
+                            builder: (context, submitState) {
+                              return ElevatedButton(
+                                onPressed: submitState is SubmitQuestionLoading
+                                    ? null
+                                    : () {
+                                        BlocProvider.of<SubmitQuestionCubit>(
+                                                context)
+                                            .submitQuestion(
+                                          widget.claimNumber,
+                                          state.questions,
+                                        );
+                                      },
+                                child: const Text("Submit"),
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.resolveWith(
+                                    (states) => EdgeInsets.symmetric(
+                                      vertical: 20.h,
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      MaterialStateProperty.resolveWith(
+                                          (states) => submitState
+                                                  is SubmitQuestionLoading
+                                              ? Colors.grey
+                                              : Theme.of(context).primaryColor),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -122,7 +157,7 @@ class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveCl
                   ElevatedButton(
                     onPressed: () {
                       BlocProvider.of<QuestionsBloc>(context).add(
-                          GetQuestionsEvent(claimNumber: widget.claimNumber),
+                        GetQuestionsEvent(claimNumber: widget.claimNumber),
                       );
                     },
                     child: const Text("RETRY"),

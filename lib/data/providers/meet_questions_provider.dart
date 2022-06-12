@@ -6,6 +6,7 @@ import 'package:rc_clone/data/providers/app_server_provider.dart';
 
 class MeetQuestionsProvider {
   static const String _unEncodedPath = "api/allquestions.php";
+  static const String _submitPath = "api/allquestionanswers.php";
 
   Future<List<Question>> getQuestions(String claimNumber) async {
     final Response _response = await post(
@@ -25,6 +26,33 @@ class MeetQuestionsProvider {
         _questions.add(Question.fromJson(_decodedQuestions[i]));
       }
       return _questions;
+    } else {
+      throw ServerException(
+        code: _response.statusCode,
+        cause: _response.reasonPhrase ?? "Unknown",
+      );
+    }
+  }
+
+  Future<bool> submitQuestions(String claimNumber, List<Question> questions) async {
+    List<String> _questions = [];
+    for (var question in questions) {
+      _questions.add(question.toJson());
+    }
+
+    final Response _response = await post(
+        Uri.https(AppServerProvider.authority, _submitPath),
+        headers: <String, String> {
+          "Content-Type": "application/json; charset=UTF-8",
+          "Accept": "application/json"
+        },
+        body: jsonEncode(<String, dynamic> {
+          "claim": claimNumber,
+          "qa" : _questions
+        }));
+
+    if (_response.statusCode == 200) {
+      return true;
     } else {
       throw ServerException(
         code: _response.statusCode,

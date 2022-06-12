@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 class Question {
   final int id;
   final String _resetQuestion;
   final String _category;
-  final int _status;
 
   String question;
-  bool flag = false;
+  bool flag;
   String? _answer;
 
   Question.fromJson(Map<String, dynamic> decodedJson) :
@@ -13,7 +14,18 @@ class Question {
       question = decodedJson["question"],
       _resetQuestion = decodedJson["question"],
       _category = decodedJson["category"],
-      _status = int.parse(decodedJson["status"]);
+      flag = int.parse(decodedJson["status"]) == 1;
+
+  String toJson() {
+    Map<String, dynamic> _question =  <String, dynamic> {
+      'id' : id,
+      'question' : question,
+      'answer' : _answer ?? "Unanswered",
+      'flag' : flag ? 1 : 0,
+      'category' : _category
+    };
+    return jsonEncode(_question);
+  }
 
   void setAnswer(String? answer) {
     _answer = answer;

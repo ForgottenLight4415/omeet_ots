@@ -50,7 +50,7 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
       "id": _savedQuestions.length.toString(),
       "question": event.question,
       "category": "OWN_QUESTION",
-      "status": "1"
+      "status": "0"
     };
     final Question _question = Question.fromJson(_rawQuestion);
     _savedQuestions.add(_question);
