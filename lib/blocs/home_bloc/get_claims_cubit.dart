@@ -16,7 +16,7 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   GetClaimsCubit() : super(GetClaimsInitial());
 
   Future<void> getClaims(BuildContext context) async {
-    if (await checkConnection(context)) {
+    if (!await checkConnection(context)) {
       emit(GetClaimsFailed(1000, "No internet connection"));
       return;
     }

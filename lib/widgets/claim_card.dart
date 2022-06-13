@@ -1,16 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:maps_launcher/maps_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:maps_launcher/maps_launcher.dart';
 import 'package:rc_clone/blocs/call_bloc/call_cubit.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/widgets/card_detail_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../utilities/app_constants.dart';
+import '../utilities/app_permission_manager.dart';
+
 class ClaimCard extends StatelessWidget {
   final Claim claim;
-
-  static const _unavailable = "Unavailable";
 
   const ClaimCard({Key? key, required this.claim}) : super(key: key);
 
@@ -37,23 +41,23 @@ class ClaimCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CardDetailText(
-                  title: "Customer name",
+                  title: AppStrings.customerName,
                   content: claim.insuredName,
                 ),
                 CardDetailText(
-                  title: "Customer address",
+                  title: AppStrings.customerAddress,
                   content:
                       _createAddress(claim.insuredCity, claim.insuredState),
                 ),
                 CardDetailText(
-                  title: "Phone number: ",
+                  title: AppStrings.phoneNumber,
                   content: claim.insuredContactNumber,
                 ),
                 CardDetailText(
-                  title: "Alternate phone number: ",
-                  content: claim.insuredAltContactNumber != ""
+                  title: AppStrings.phoneNumberAlt,
+                  content: claim.insuredAltContactNumber != AppStrings.blank
                       ? claim.insuredAltContactNumber
-                      : "N/A",
+                      : AppStrings.unavailable,
                 ),
                 SizedBox(height: 15.h),
                 Row(
@@ -67,7 +71,7 @@ class ClaimCard extends StatelessWidget {
                           } else if (state is CallReady) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text("You'll receive a call soon."),
+                                content: Text(AppStrings.recieveCall),
                               ),
                             );
                           }
@@ -76,7 +80,7 @@ class ClaimCard extends StatelessWidget {
                           onPressed: () async {
                             String? _selectedPhone;
                             if (claim.insuredAltContactNumber !=
-                                _unavailable) {
+                                AppStrings.unavailable) {
                               await showModalBottomSheet(
                                 context: context,
                                 constraints: BoxConstraints(
@@ -88,7 +92,7 @@ class ClaimCard extends StatelessWidget {
                                       padding:
                                           EdgeInsets.symmetric(vertical: 16.h),
                                       child: Text(
-                                        "Voice call",
+                                        AppStrings.voiceCall,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6,
@@ -129,11 +133,6 @@ class ClaimCard extends StatelessWidget {
                               _selectedPhone = claim.insuredContactNumber;
                             }
                             if (_selectedPhone != null) {
-                              // final Uri _launchUri = Uri(
-                              //   scheme: 'tel',
-                              //   path: _selectedPhone
-                              // );
-                              // await launch(_launchUri.toString());
                               BlocProvider.of<CallCubit>(context).callClient(
                                   claimNumber: claim.claimNumber,
                                   phoneNumber: _selectedPhone!,
@@ -147,22 +146,33 @@ class ClaimCard extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () async {
+                        bool cameraStatus = await cameraPermission();
+                        bool microphoneStatus = await microphonePermission();
+                        bool storageStatus = await storagePermission();
+                        Navigator.pop(context);
+                        if (cameraStatus && microphoneStatus && storageStatus) {
+                          log("Starting meet");
+                          Navigator.pushNamed(context, '/claim/meeting',
+                              arguments: claim);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Camera, microphone and storage permission is required to access this feature.",
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: const FaIcon(FontAwesomeIcons.video),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
                         final Uri _launchUri =
                             Uri(scheme: 'mailto', path: claim.email);
                         await launchUrl(_launchUri);
                       },
                       child: const Icon(Icons.mail),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        MapsLauncher.launchQuery(
-                          "${claim.insuredCity}, ${claim.insuredState}",
-                        );
-                      },
-                      child: const Text(
-                        "View in Maps",
-                        textAlign: TextAlign.center,
-                      ),
                     ),
                   ],
                 ),
@@ -175,8 +185,8 @@ class ClaimCard extends StatelessWidget {
   }
 
   String _createAddress(String city, String state) {
-    if (city == _unavailable || state == _unavailable) {
-      return _unavailable;
+    if (city == AppStrings.unavailable || state == AppStrings.unavailable) {
+      return AppStrings.unavailable;
     }
     return "$city, $state";
   }
@@ -196,7 +206,7 @@ class PhoneListTile extends StatelessWidget {
         padding: EdgeInsets.only(left: 12.w, top: 8.h),
         child: Icon(Icons.phone, size: 30.w, color: Colors.deepOrange),
       ),
-      title: Text(primary ? "Primary" : "Secondary"),
+      title: Text(primary ? AppStrings.primary : AppStrings.secondary),
       subtitle: Text(phoneNumber),
     );
   }

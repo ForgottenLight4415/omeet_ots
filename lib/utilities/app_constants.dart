@@ -23,6 +23,7 @@ class AppStrings {
   static const String submitAnswersUrl = "api/allquestionanswers.php";
 
   // ERRORS AND FILLERS
+  static const String blank = "";
   static const String ok = "OK";
   static const String allow = "ALLOW";
   static const String deny = "DENY";
@@ -30,6 +31,7 @@ class AppStrings {
   static const String openSettings = "OPEN SETTINGS";
   static const String grantPermission = "GRANT PERMISSION";
   static const String unknown = "Unknown";
+  static const String unavailable = "Unavailable";
   static const String retry = "RETRY";
   static const String noInternet = "No internet";
   static const String somethingWrong = "Something went wrong on our end.";
@@ -54,4 +56,12 @@ class AppStrings {
   // APP TEXT
   static const String claimsLoading = "Getting claims...";
   static const String noClaims = "No claims";
+  static const String primary = "Primary";
+  static const String secondary = "Secondary";
+  static const String voiceCall = "Voice call";
+  static const String customerName = "Customer name";
+  static const String customerAddress = "Customer address";
+  static const String phoneNumber = "Phone number: ";
+  static const String phoneNumberAlt = "Alternate phone number: ";
+  static const String recieveCall = "You'll receive a call soon.";
 }
