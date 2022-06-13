@@ -1,5 +1,53 @@
+import 'dart:convert';
+
+import 'package:http/http.dart';
+
+import '../../utilities/app_constants.dart';
+
+class DecodedResponse {
+  final int statusCode;
+  final String? reasonPhrase;
+  final Map<String, dynamic>? data;
+
+  const DecodedResponse({required this.statusCode, this.reasonPhrase, this.data});
+}
+
 class AppServerProvider {
-  static const String authority = "omeet.in";
+  final int successCode = 200;
+  final int notFound = 404;
+  final int error = 500;
+
+  Future<DecodedResponse> postRequest(
+      {required String path, required Map<String, dynamic> data}) async {
+    final Response _response = await post(
+      Uri.https(AppStrings.baseUrl, path),
+      headers: <String, String> {
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept": "application/json"
+      },
+      body: jsonEncode(data),
+    );
+    final DecodedResponse _decodedResponse = DecodedResponse(
+      statusCode: _response.statusCode,
+      reasonPhrase: _response.reasonPhrase,
+      data: jsonDecode(_response.body),
+    );
+    return _decodedResponse;
+  }
+
+  Future<bool> callRequest(Map<String, dynamic> data) async {
+    final Response _response = await get(
+      Uri.https(
+          AppStrings.bridgeCallBaseUrl, AppStrings.voiceCallUrl,
+          data,
+      ),
+      headers: <String, String> {
+        "Accept" : "application/json"
+      },
+    );
+
+    return _response.statusCode == successCode;
+  }
 }
 
 class ServerException implements Exception {

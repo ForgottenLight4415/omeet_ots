@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jitsi_meet/jitsi_meet.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/data/providers/authentication_provider.dart';
-import 'package:rc_clone/utilities/screen_recorder.dart';
-import 'package:rc_clone/widgets/buttons.dart';
-import 'package:rc_clone/widgets/scaling_tile.dart';
+
+import '/data/models/claim.dart';
+import '/data/providers/authentication_provider.dart';
+import '/utilities/screen_recorder.dart';
+import '/widgets/buttons.dart';
+import '/widgets/scaling_tile.dart';
 
 enum VideoMeetStatus { none, joining, inProgress, terminated, error }
 
@@ -227,21 +228,20 @@ class _VideoMeetPageState extends State<VideoMeetPage>
         FeatureFlagEnum.PIP_ENABLED: true,
         FeatureFlagEnum.CALENDAR_ENABLED: false,
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
-        FeatureFlagEnum.RECORDING_ENABLED: true,
+        FeatureFlagEnum.RECORDING_ENABLED: false,
       };
-      var options = JitsiMeetingOptions(
-          room: "${widget.claim.claimID}_${widget.claim.claimNumber}")
+      var options = JitsiMeetingOptions(room: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}")
         ..serverURL =
             "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
-        ..userDisplayName = "RC"
+        ..userDisplayName = "OMeet Agent"
         ..userEmail = await AuthenticationProvider.getEmail()
         ..audioOnly = _isAudioOnly
         ..audioMuted = _isAudioMuted
         ..videoMuted = _isVideoMuted
         ..featureFlags = featureFlags;
 
-      await JitsiMeet.joinMeeting(options);
+      await JitsiMeet.joinMeeting(options, roomNameConstraints: {});
     } catch (error) {
       log(error.toString());
     }

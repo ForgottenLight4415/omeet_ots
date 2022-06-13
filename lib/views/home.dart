@@ -6,22 +6,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 
-import 'package:rc_clone/blocs/home_bloc/get_claims_cubit.dart';
-import 'package:rc_clone/data/repositories/auth_repo.dart';
-import 'package:rc_clone/utilities/app_permission_manager.dart';
-import 'package:rc_clone/utilities/camera_utility.dart';
-import 'package:rc_clone/utilities/location_service.dart';
-import 'package:rc_clone/utilities/screen_recorder.dart';
-import 'package:rc_clone/utilities/show_snackbars.dart';
-import 'package:rc_clone/views/recorder_pages/audio_record.dart';
-import 'package:rc_clone/widgets/claim_options_tile.dart';
-import 'package:rc_clone/widgets/input_fields.dart';
-import 'package:rc_clone/widgets/loading_widget.dart';
-import 'package:rc_clone/widgets/error_widget.dart';
-import 'package:rc_clone/widgets/scaling_tile.dart';
-import 'package:rc_clone/widgets/claim_card.dart';
-import 'package:rc_clone/data/models/claim.dart';
+import '../blocs/home_bloc/get_claims_cubit.dart';
+import '../data/repositories/auth_repo.dart';
+import '../utilities/app_permission_manager.dart';
+import '../utilities/camera_utility.dart';
+import '../utilities/location_service.dart';
+import '../utilities/screen_recorder.dart';
+import '../utilities/show_snackbars.dart';
+import '../views/recorder_pages/audio_record.dart';
+import '../widgets/claim_options_tile.dart';
+import '../widgets/input_fields.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/error_widget.dart';
+import '../widgets/scaling_tile.dart';
+import '../widgets/claim_card.dart';
+import '../data/models/claim.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -104,14 +105,14 @@ class _HomePageState extends State<HomePage> {
           ];
         },
         body: BlocProvider<GetClaimsCubit>(
-          create: (context) => _claimsCubit..getClaims(),
+          create: (context) => _claimsCubit..getClaims(context),
           child: BlocBuilder<GetClaimsCubit, GetClaimsState>(
             builder: (context, state) {
               if (state is GetClaimsSuccess) {
                 if (state.claims.isEmpty) {
                   return const InformationWidget(
-                    svgImage: "images/no-data.svg",
-                    label: "No claims",
+                    svgImage: AppStrings.noDataImage,
+                    label: AppStrings.noClaims,
                   );
                 }
                 return ListView.builder(
@@ -135,14 +136,14 @@ class _HomePageState extends State<HomePage> {
                 );
               } else if (state is GetClaimsFailed) {
                 return CustomErrorWidget(
-                  errorText: "Something went wrong on our end.\n"
-                      "${state.cause}\n(Error code: ${state.code})",
+                  errorText: state.cause +
+                      "\n(Error code: ${state.code})",
                   action: () {
-                    BlocProvider.of<GetClaimsCubit>(context).getClaims();
+                    BlocProvider.of<GetClaimsCubit>(context).getClaims(context);
                   },
                 );
               } else {
-                return const LoadingWidget(label: "Getting claims...");
+                return const LoadingWidget(label: AppStrings.claimsLoading);
               }
             },
           ),

@@ -1,33 +1,26 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthenticationProvider {
-  static const String _unEncodedPath = "api/loginm.php";
-
-  static Future<bool> signIn(String email, String password) async {
-    final Response _serverResponse = await post(
-        Uri.https(AppServerProvider.authority, _unEncodedPath),
-        headers: <String, String>{
-          "Content-Type": "application/json; charset=UTF-8",
-          "Accept": "application/json"
-        },
-        body: jsonEncode(
-            <String, String>{"email": email.trim(), "password": password}));
-
-    if (_serverResponse.statusCode == 200) {
-      final Map<String, dynamic> _decodedResponse =
-          jsonDecode(_serverResponse.body);
-      return _setLoginStatus(_decodedResponse["code"] == 200, email: email);
-    } else if (_serverResponse.statusCode == 500) {
+class AuthenticationProvider extends AppServerProvider {
+  Future<bool> signIn(String email, String password) async {
+    final Map<String, String> _data = <String, String> {
+      "email": email.trim(),
+      "password": password,
+    };
+    final DecodedResponse _response = await postRequest(
+      path: AppStrings.loginUrl,
+      data: _data,
+    );
+    if (_response.statusCode == successCode) {
+      final Map<String, dynamic> _rData = _response.data!;
+      return _setLoginStatus(_rData["code"] == successCode, email: email);
+    } else {
       throw ServerException(
-        code: _serverResponse.statusCode,
-        cause: _serverResponse.reasonPhrase ?? "Unknown",
+        code: _response.statusCode,
+        cause: _response.reasonPhrase ?? AppStrings.unknown,
       );
     }
-    return false;
   }
 
   static Future<void> signOut() async {

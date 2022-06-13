@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   final String errorText;
@@ -11,7 +12,7 @@ class CustomErrorWidget extends StatelessWidget {
     Key? key,
     required this.errorText,
     required this.action,
-    this.actionLabel = "RETRY",
+    this.actionLabel = AppStrings.retry,
   }) : super(key: key);
 
   @override
@@ -22,7 +23,7 @@ class CustomErrorWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Image.asset(
-            "images/error.png",
+            AppStrings.errorImage,
             height: 400.h,
             width: 500.w,
           ),
@@ -31,9 +32,7 @@ class CustomErrorWidget extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline5,
           ),
-          SizedBox(
-            height: 20.h,
-          ),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: action,
             child: Text(actionLabel),
@@ -61,11 +60,11 @@ class InformationWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SvgPicture.asset(svgImage, height: 300.h, width: 150.w),
-          SizedBox(height: 30.h),
+          const SizedBox(height: 30),
           Text(
             label,
             style: Theme.of(context).textTheme.headline5!.copyWith(
-                fontFamily: 'Nunito',
+                fontFamily: AppStrings.secondaryFontFam,
                 fontWeight: FontWeight.w600,
                 color: Colors.black54,
             ),

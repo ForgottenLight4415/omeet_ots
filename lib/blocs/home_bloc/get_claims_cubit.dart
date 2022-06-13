@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
 import 'package:rc_clone/data/repositories/home_repo.dart';
+
+import '../../utilities/check_connection.dart';
 
 part 'get_claims_state.dart';
 
@@ -12,7 +15,11 @@ class GetClaimsCubit extends Cubit<GetClaimsState> {
   final HomeRepository _homeRepository = HomeRepository();
   GetClaimsCubit() : super(GetClaimsInitial());
 
-  Future<void> getClaims() async {
+  Future<void> getClaims(BuildContext context) async {
+    if (await checkConnection(context)) {
+      emit(GetClaimsFailed(1000, "No internet connection"));
+      return;
+    }
     emit(GetClaimsLoading());
     try {
       emit(GetClaimsSuccess(await _homeRepository.getClaims()));

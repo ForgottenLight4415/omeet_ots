@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/repositories/data_upload_repo.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 
 class ScreenRecorder {
   EdScreenRecorder? _edScreenRecorder;
@@ -37,7 +38,7 @@ class ScreenRecorder {
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("File uploaded successfully!"),
+          content: Text(AppStrings.fileUploaded),
           backgroundColor: Colors.green,
         ),
       );
@@ -46,7 +47,7 @@ class ScreenRecorder {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Failed to upload the files."),
+          content: Text(AppStrings.fileUploadFailed),
           backgroundColor: Colors.red,
         ),
       );

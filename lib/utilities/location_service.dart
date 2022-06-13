@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import '/utilities/app_constants.dart';
 
 class LocationService {
   final Location _location = Location();
@@ -13,21 +14,21 @@ class LocationService {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Location is disabled"),
-          content: const Text("Location access is needed to access this feature."),
+          title: const Text(AppStrings.locationDisabled),
+          content: const Text(AppStrings.locationExplanation),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
                 _serviceEnabled = await _location.requestService();
               },
-              child: const Text("ALLOW"),
+              child: const Text(AppStrings.allow),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: const Text("DENY"),
+              child: const Text(AppStrings.deny),
             )
           ],
         ),
@@ -43,21 +44,21 @@ class LocationService {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Location permission required"),
-          content: const Text("Location permission is needed to access this feature."),
+          title: const Text(AppStrings.locationPermission),
+          content: const Text(AppStrings.locationPermExplanation),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: const Text("CANCEL"),
+              child: const Text(AppStrings.cancel),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
                 _permissionGranted = await _location.requestPermission();
               },
-              child: const Text("GRANT PERMISSION"),
+              child: const Text(AppStrings.grantPermission),
             ),
           ],
         ),
@@ -71,21 +72,21 @@ class LocationService {
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text("Location permission required"),
-          content: const Text("Location permission is needed to access this feature. Grant permission in settings?"),
+          title: const Text(AppStrings.locationPermission),
+          content: const Text(AppStrings.locationPermExplanationB),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
               },
-              child: const Text("CANCEL"),
+              child: const Text(AppStrings.cancel),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
                 ph.openAppSettings();
               },
-              child: const Text("OPEN SETTINGS"),
+              child: const Text(AppStrings.openSettings),
             ),
           ],
         ),
@@ -103,6 +104,6 @@ class LocationService {
     if (await _checkService(context) && await _grantPermission(context)) {
       return await _location.getLocation();
     }
-    throw Exception("Location is not enabled or permission is not granted");
+    throw Exception(AppStrings.locationError);
   }
 }

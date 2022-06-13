@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
 
 Future<bool> checkConnection(BuildContext context) async {
-  if (!await SimpleConnectionChecker
-      .isConnectedToInternet()) {
+  if (!await SimpleConnectionChecker.isConnectedToInternet()) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title:
-            const Text("No internet"),
+            const Text(AppStrings.noInternet),
             content: const Text(
-              "Look like you are offline!\nCheck if your WiFi or mobile data is turned on and if you have access to the internet.",
+              AppStrings.looksLikeOffline + AppStrings.offlineSolution,
               textAlign: TextAlign.justify,
             ),
             actions: <Widget>[
@@ -19,11 +19,11 @@ Future<bool> checkConnection(BuildContext context) async {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text("OK"),
+                child: const Text(AppStrings.ok),
               )
             ],
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0)
+              borderRadius: BorderRadius.circular(24.0)
             ),
           );
         });
