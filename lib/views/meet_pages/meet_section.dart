@@ -139,7 +139,7 @@ class _VideoMeetPageState extends State<VideoMeetPage>
             ScalingTile(
               onPressed: () async {
                 await _screenRecorder!.startRecord(
-                  fileName: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
+                  claimNumber: widget.claim.claimNumber,
                 );
                 await _joinMeeting();
               },

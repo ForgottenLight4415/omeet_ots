@@ -10,31 +10,40 @@ import 'package:rc_clone/utilities/app_constants.dart';
 
 class ScreenRecorder {
   EdScreenRecorder? _edScreenRecorder;
+  bool _isRecording = false;
+  String? _claimNumber;
 
   ScreenRecorder() {
     _edScreenRecorder = EdScreenRecorder();
   }
 
-  Future<Map<String, dynamic>> startRecord({required String fileName}) async {
+  Future<Map<String, dynamic>> startRecord({required String claimNumber}) async {
     log("Starting screen record");
     Directory? directory = await getExternalStorageDirectory();
-    Directory? _saveDirectory = await Directory("${directory!.path}/ScreenRecordings").create();
+    Directory? _saveDirectory =
+        await Directory("${directory!.path}/ScreenRecordings").create();
     var response = await _edScreenRecorder!.startRecordScreen(
-      fileName: fileName,
+      fileName: "${claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );
     log(response.toString());
+    _claimNumber = claimNumber;
+    _isRecording = true;
     return response;
   }
 
-  Future<Map<String, dynamic>> stopRecord({required Claim claim, required BuildContext context}) async {
+  Future<Map<String, dynamic>> stopRecord(
+      {required Claim claim, required BuildContext context}) async {
     var response = await _edScreenRecorder?.stopRecord();
     log(response.toString());
     File _videoFile = response!['file'];
-
-    bool _result = await DataUploadRepository()
-        .uploadData(claim.claimNumber, 0, 0, _videoFile);
+    bool _result = await DataUploadRepository().uploadData(
+      claim.claimNumber,
+      0,
+      0,
+      _videoFile,
+    );
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -52,6 +61,12 @@ class ScreenRecorder {
         ),
       );
     }
+    _claimNumber = null;
+    _isRecording = false;
     return response;
   }
+
+  bool get isRecording => _isRecording;
+
+  String? get claimNumber => _claimNumber;
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
 import 'package:rc_clone/data/repositories/home_repo.dart';
