@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/get_document_cubit.dart';
+import 'package:rc_clone/blocs/meet_page_bloc/document_cubit/get_document_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rc_clone/widgets/scaling_tile.dart';
 
 class MeetDocumentsScreen extends StatefulWidget {
   final String claimNumber;
 
-  const MeetDocumentsScreen({Key? key, required this.claimNumber}) : super(key: key);
+  const MeetDocumentsScreen({Key? key, required this.claimNumber})
+      : super(key: key);
 
   @override
   State<MeetDocumentsScreen> createState() => _MeetDocumentsScreenState();
 }
 
-class _MeetDocumentsScreenState extends State<MeetDocumentsScreen> with AutomaticKeepAliveClientMixin<MeetDocumentsScreen> {
-
+class _MeetDocumentsScreenState extends State<MeetDocumentsScreen>
+    with AutomaticKeepAliveClientMixin<MeetDocumentsScreen> {
   @override
   bool get wantKeepAlive {
     return true;
@@ -29,59 +31,49 @@ class _MeetDocumentsScreenState extends State<MeetDocumentsScreen> with Automati
           if (state is GetDocumentReady) {
             if (state.documents.isEmpty) {
               return Center(
-                child: Text("No documents",
-                  style: TextStyle(
-                    fontSize: 22.sp
-                  ),
+                child: Text(
+                  "No documents",
+                  style: TextStyle(fontSize: 22.sp),
                 ),
               );
             }
-            return ListView.builder(
-                itemCount: state.documents.length,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Card(
-                      child: Container(
-                        margin: EdgeInsets.all(10.w),
-                        constraints: BoxConstraints(
-                          minHeight: 130.h,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                constraints: BoxConstraints(
-                                  minHeight: 80.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(state.documents[index].documentUrl)
-                                  )
-                                ),
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ListView.builder(
+                  itemCount: state.documents.length,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: ScalingTile(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context,
+                              '/view/document',
+                              arguments: state.documents[index].fileName,
+                          );
+                        },
+                        child: Card(
+                          child: Container(
+                            margin: EdgeInsets.all(10.w),
+                            constraints: BoxConstraints(
+                              minHeight: 130.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Document ${state.documents[index].id}",
+                                textAlign: TextAlign.left,
+                                overflow: TextOverflow.fade,
+                                maxLines: 2,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                             ),
-                            Expanded(
-                              flex: 7,
-                              child: Padding(
-                                padding: EdgeInsets.all(10.w),
-                                child: Text(
-                                  "Document ${index + 1}",
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 2,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                });
+                    );
+                  }),
+            );
           } else if (state is GetDocumentFailed) {
             return Center(
               child: Column(
@@ -91,7 +83,8 @@ class _MeetDocumentsScreenState extends State<MeetDocumentsScreen> with Automati
                   const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
-                      BlocProvider.of<GetDocumentCubit>(context).getDocuments(widget.claimNumber);
+                      BlocProvider.of<GetDocumentCubit>(context)
+                          .getDocuments(widget.claimNumber);
                     },
                     child: const Text("RETRY"),
                   ),

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rc_clone/views/documents_page.dart';
+import 'package:rc_clone/views/pdf_viewer.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
@@ -42,6 +44,13 @@ class RouteGenerator {
         return _platformDependentRouting(
           CaptureImagePage(arguments: _captureImageArgs),
         );
+
+      case '/documents':
+        final String _claimNumber = args as String;
+        return _platformDependentRouting(DocumentsPage(claimNumber: _claimNumber));
+      case '/view/document':
+        final String _documentUrl = args as String;
+        return _platformDependentRouting(PDFViewPage(documentUrl: _documentUrl));
 
       default:
         return _platformDependentRouting(const InvalidRoute());

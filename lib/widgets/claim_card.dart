@@ -219,15 +219,16 @@ class _ClaimCardState extends State<ClaimCard> {
                 ClaimPageTiles(
                   faIcon: FontAwesomeIcons.fileAlt,
                   label: "Documents",
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/documents', arguments: widget.claim.claimNumber);
+                  },
                 ),
-                ClaimPageTiles(
-                  faIcon: FontAwesomeIcons.history,
-                  label: "Previous records",
-                  onPressed: () {},
-                ),
+                // ClaimPageTiles(
+                //   faIcon: FontAwesomeIcons.history,
+                //   label: "Previous records",
+                //   onPressed: () {},
+                // ),
 
-                // DONE
                 ClaimPageTiles(
                   faIcon: FontAwesomeIcons.microphone,
                   label: "Record audio",
@@ -252,7 +253,6 @@ class _ClaimCardState extends State<ClaimCard> {
                     recordVideo(context, widget.claim);
                   },
                 ),
-                // DONE
 
                 ClaimPageTiles(
                   faIcon: FontAwesomeIcons.video,
