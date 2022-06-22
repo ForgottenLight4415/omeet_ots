@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:rc_clone/utilities/camera_utility.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
+import '../../widgets/buttons.dart';
 
 class CaptureImagePage extends StatefulWidget {
   final CameraCaptureArguments arguments;
@@ -102,6 +103,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: const Text('Capture image'),
       ),
       body: Column(

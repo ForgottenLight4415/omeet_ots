@@ -64,9 +64,12 @@ class AppStrings {
   static const String primary = "Primary";
   static const String secondary = "Secondary";
   static const String voiceCall = "Voice call";
+  static const String receiveCall = "You'll receive a call soon.";
+
+  // DETAILS
   static const String customerName = "Customer name";
   static const String customerAddress = "Customer address";
   static const String phoneNumber = "Phone number: ";
   static const String phoneNumberAlt = "Alternate phone number: ";
-  static const String receiveCall = "You'll receive a call soon.";
+  static const String emailAddress = "Email address";
 }

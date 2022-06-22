@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
 import '../../utilities/camera_utility.dart';
+import '../../widgets/buttons.dart';
 
 class VideoRecordPage extends StatefulWidget {
   final CameraCaptureArguments arguments;
@@ -103,6 +104,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: const Text('Record video'),
       ),
       body: Column(

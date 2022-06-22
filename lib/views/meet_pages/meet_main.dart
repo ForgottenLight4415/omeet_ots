@@ -40,7 +40,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
             VideoMeetPage(claim: widget.claim),
             QuestionsPage(claimNumber: widget.claim.claimNumber),
             DocumentsView(claimNumber: widget.claim.claimNumber),
-            const MeetDetails()
+            MeetDetails(claim: widget.claim),
           ],
         ),
       ),

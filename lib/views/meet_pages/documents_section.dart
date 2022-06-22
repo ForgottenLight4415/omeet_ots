@@ -46,15 +46,17 @@ class _DocumentsViewState extends State<DocumentsView>
               ),
             );
           } else if (state is GetDocumentFailed) {
-              return CustomErrorWidget(
-                errorText: "Exception: ${state.cause} (${state.code})",
-                action: () {
-                  BlocProvider.of<GetDocumentCubit>(context)
-                      .getDocuments(widget.claimNumber);
-                },
-              );
+            return CustomErrorWidget(
+              errorText: "Exception: ${state.cause} (${state.code})",
+              action: () {
+                BlocProvider.of<GetDocumentCubit>(context)
+                    .getDocuments(widget.claimNumber);
+              },
+            );
           } else {
-              return const LoadingWidget(label: "Fetching documents",);
+            return const LoadingWidget(
+              label: "Fetching documents",
+            );
           }
         },
       ),
