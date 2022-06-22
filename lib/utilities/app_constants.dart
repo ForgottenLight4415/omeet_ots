@@ -24,30 +24,34 @@ class AppStrings {
 
   // ERRORS AND FILLERS
   static const String blank = "";
+  static const String unknown = "Unknown";
+  static const String noInternet = "No internet";
+  static const String unavailable = "Unavailable";
+  static const String locationDisabled = "Location is disabled.";
+  static const String fileUploaded = "File uploaded successfully.";
+  static const String fileUploadFailed = "Failed to upload the files.";
+  static const String looksLikeOffline = "Looks like you are offline!\n";
+  static const String somethingWrong = "Something went wrong on our end.";
+  static const String locationPermission = "Location permission required.";
+
+  // BUTTON TEXT
   static const String ok = "OK";
-  static const String allow = "ALLOW";
   static const String deny = "DENY";
+  static const String allow = "ALLOW";
+  static const String retry = "RETRY";
   static const String cancel = "CANCEL";
   static const String openSettings = "OPEN SETTINGS";
   static const String grantPermission = "GRANT PERMISSION";
-  static const String unknown = "Unknown";
-  static const String unavailable = "Unavailable";
-  static const String retry = "RETRY";
-  static const String noInternet = "No internet";
-  static const String somethingWrong = "Something went wrong on our end.";
-  static const String looksLikeOffline = "Looks like you are offline!\n";
-  static const String offlineSolution = "Check if your WiFi or mobile data is turned on and if you have access to the internet.";
-  static const String locationDisabled = "Location is disabled";
-  static const String locationPermission = "Location permission required";
+  static const String stopRecording = "Stop recording";
+  static const String startRecording = "Start recording";
+
+  // LONG INFORMATION TEXT
   static const String locationExplanation = "Location access is needed to access this feature.";
   static const String locationPermExplanation = "Location permission is needed to access this feature.";
-  static const String locationPermExplanationB = "Location permission is needed to access this feature. Grant permission in settings?";
   static const String camMicStoragePerm = "Camera, microphone and storage permission is required to access this feature.";
+  static const String offlineSolution = "Check if your WiFi or mobile data is turned on and if you have access to the internet.";
+  static const String locationPermExplanationB = "Location permission is needed to access this feature. Grant permission in settings?";
   static const String locationError = "Location is not enabled or permission is not granted";
-  static const String fileUploaded = "File uploaded successfully";
-  static const String fileUploadFailed = "Failed to upload the files.";
-  static const String startRecording = "Start recording";
-  static const String stopRecording = "Stop recording";
 
   // IMAGE LINKS
   static const String noDataImage = "images/no-data.svg";
@@ -65,6 +69,7 @@ class AppStrings {
   static const String secondary = "Secondary";
   static const String voiceCall = "Voice call";
   static const String receiveCall = "You'll receive a call soon.";
+  static const String startingUpload = "Starting upload";
 
   // DETAILS
   static const String customerName = "Customer name";

@@ -17,7 +17,8 @@ class ScreenRecorder {
     _edScreenRecorder = EdScreenRecorder();
   }
 
-  Future<Map<String, dynamic>> startRecord({required String claimNumber}) async {
+  Future<Map<String, dynamic>> startRecord(
+      {required String claimNumber}) async {
     log("Starting screen record");
     Directory? directory = await getExternalStorageDirectory();
     Directory? _saveDirectory =
@@ -27,7 +28,6 @@ class ScreenRecorder {
       dirPathToSave: _saveDirectory.path,
       audioEnable: true,
     );
-    log(response.toString());
     _claimNumber = claimNumber;
     _isRecording = true;
     return response;
@@ -36,13 +36,13 @@ class ScreenRecorder {
   Future<Map<String, dynamic>> stopRecord(
       {required Claim claim, required BuildContext context}) async {
     var response = await _edScreenRecorder?.stopRecord();
-    log(response.toString());
     File _videoFile = response!['file'];
-    bool _result = await DataUploadRepository().uploadData(
-      claim.claimNumber,
-      0,
-      0,
-      _videoFile,
+    final DataUploadRepository _repository = DataUploadRepository();
+    bool _result = await _repository.uploadData(
+      claimNumber: claim.claimNumber,
+      latitude: 0,
+      longitude: 0,
+      file: _videoFile,
     );
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -52,7 +52,6 @@ class ScreenRecorder {
         ),
       );
       _videoFile.delete();
-      log("File deleted");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

@@ -1,12 +1,12 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rc_clone/data/models/claim.dart';
-import 'package:rc_clone/data/repositories/data_upload_repo.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
+
+import '../data/models/claim.dart';
+import '../utilities/app_constants.dart';
+import '../data/repositories/data_upload_repo.dart';
 
 class SoundRecorder {
   final Claim claim;
@@ -22,7 +22,6 @@ class SoundRecorder {
     _audioRecorder = FlutterSoundRecorder();
     await _audioRecorder!.openAudioSession();
     _isRecorderInitialized = true;
-    log("Recorder initialized");
   }
 
   void dispose() {
@@ -32,12 +31,13 @@ class SoundRecorder {
   }
 
   Future<void> _record() async {
-    log("$_isRecorderInitialized");
     if (!_isRecorderInitialized) return;
+    int _currentTime = DateTime.now().microsecondsSinceEpoch;
     Directory? directory = await getExternalStorageDirectory();
     Directory? _saveDirectory = await Directory(directory!.path + "/Audio").create();
+    String _fileName = "/${claim.claimNumber}_$_currentTime.aac";
     await _audioRecorder!.startRecorder(
-        toFile: _saveDirectory.path + "/${claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}.aac",
+        toFile: _saveDirectory.path + _fileName,
         codec: Codec.aacADTS
     );
   }
@@ -46,8 +46,13 @@ class SoundRecorder {
     if (!_isRecorderInitialized) return;
     String? _path = await _audioRecorder!.stopRecorder();
     File _audioFile = File(_path!);
-    bool _result = await DataUploadRepository()
-        .uploadData(claim.claimNumber, latitude, longitude, _audioFile);
+    final DataUploadRepository _repository = DataUploadRepository();
+    bool _result = await _repository.uploadData(
+        claimNumber: claim.claimNumber,
+        latitude: latitude,
+        longitude: longitude,
+        file: _audioFile,
+    );
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -56,7 +61,6 @@ class SoundRecorder {
         ),
       );
       _audioFile.delete();
-      log("File deleted");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

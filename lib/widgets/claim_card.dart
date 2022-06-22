@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rc_clone/widgets/snack_bar.dart';
@@ -124,9 +122,9 @@ class _ClaimCardState extends State<ClaimCard> {
     if (state is CallLoading) {
       showSnackBar(context, AppStrings.connecting);
     } else if (state is CallReady) {
-      showSnackBar(context, AppStrings.receiveCall);
+      showSnackBar(context, AppStrings.receiveCall, type: SnackBarType.success);
     } else if (state is CallFailed) {
-      showSnackBar(context, state.cause, isError: true);
+      showSnackBar(context, state.cause, type: SnackBarType.error);
     }
   }
 
@@ -135,7 +133,6 @@ class _ClaimCardState extends State<ClaimCard> {
     bool microphoneStatus = await microphonePermission();
     bool storageStatus = await storagePermission();
     if (cameraStatus && microphoneStatus && storageStatus) {
-      log("Starting meet");
       Navigator.pushNamed(context, '/claim/meeting', arguments: widget.claim);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/repositories/auth_repo.dart';
+
+import '../../data/providers/app_server_provider.dart';
+import '../../data/repositories/auth_repo.dart';
 
 part 'auth_state.dart';
 

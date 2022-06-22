@@ -5,10 +5,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
-import 'package:rc_clone/utilities/camera_utility.dart';
 
-import '../../data/repositories/data_upload_repo.dart';
 import '../../widgets/buttons.dart';
+import '../../widgets/snack_bar.dart';
+import '../../utilities/app_constants.dart';
+import '../../utilities/camera_utility.dart';
+import '../../data/repositories/data_upload_repo.dart';
 
 class CaptureImagePage extends StatefulWidget {
   final CameraCaptureArguments arguments;
@@ -147,7 +149,6 @@ class _CaptureImagePageState extends State<CaptureImagePage>
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
     final CameraController? cameraController = controller;
-
     if (cameraController == null || !cameraController.value.isInitialized) {
       return const Text(
         'Tap a camera',
@@ -314,7 +315,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setExposurePoint(null);
-                        showInSnackBar('Resetting exposure point');
+                        showSnackBar(context, 'Resetting exposure point');
                       }
                     },
                     child: const Text('AUTO'),
@@ -399,7 +400,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                       if (controller != null) {
                         controller!.setFocusPoint(null);
                       }
-                      showInSnackBar('Resetting focus point');
+                      showSnackBar(context, 'Resetting focus point');
                     },
                     child: const Text('AUTO'),
                   ),
@@ -447,7 +448,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
 
     if (widget.arguments.cameras.isEmpty) {
       _ambiguate(SchedulerBinding.instance)?.addPostFrameCallback((_) async {
-        showInSnackBar('No camera found.');
+        showSnackBar(context, 'No camera found.');
       });
       return const Text('None');
     } else {
@@ -473,11 +474,6 @@ class _CaptureImagePageState extends State<CaptureImagePage>
   }
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
-
-  void showInSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
     if (controller == null) {
@@ -521,7 +517,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
         setState(() {});
       }
       if (cameraController.value.hasError) {
-        showInSnackBar(
+        showSnackBar(context,
             'Camera error ${cameraController.value.errorDescription}');
       }
     });
@@ -544,30 +540,30 @@ class _CaptureImagePageState extends State<CaptureImagePage>
     } on CameraException catch (e) {
       switch (e.code) {
         case 'CameraAccessDenied':
-          showInSnackBar('You have denied camera access.');
+          showSnackBar(context, 'You have denied camera access.');
           break;
         case 'CameraAccessDeniedWithoutPrompt':
         // iOS only
-          showInSnackBar('Please go to Settings app to enable camera access.');
+          showSnackBar(context, 'Please go to Settings app to enable camera access.');
           break;
         case 'CameraAccessRestricted':
         // iOS only
-          showInSnackBar('Camera access is restricted.');
+          showSnackBar(context, 'Camera access is restricted.');
           break;
         case 'AudioAccessDenied':
-          showInSnackBar('You have denied audio access.');
+          showSnackBar(context, 'You have denied audio access.');
           break;
         case 'AudioAccessDeniedWithoutPrompt':
         // iOS only
-          showInSnackBar('Please go to Settings app to enable audio access.');
+          showSnackBar(context, 'Please go to Settings app to enable audio access.');
           break;
         case 'AudioAccessRestricted':
         // iOS only
-          showInSnackBar('Audio access is restricted.');
+          showSnackBar(context, 'Audio access is restricted.');
           break;
         case 'cameraPermission':
         // Android & web only
-          showInSnackBar('Unknown permission error.');
+          showSnackBar(context, 'Unknown permission error.');
           break;
         default:
           _showCameraException(e);
@@ -589,29 +585,22 @@ class _CaptureImagePageState extends State<CaptureImagePage>
         if (file != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Starting upload"),
+              content: Text(AppStrings.startingUpload),
               backgroundColor: Colors.green,
             ),
           );
           File _imageFile = File(imageFile!.path);
           LocationData _locationData = widget.arguments.locationData;
-          bool _result = await DataUploadRepository().uploadData(
-            widget.arguments.claim.claimNumber,
-            _locationData.latitude ?? 0,
-            _locationData.longitude ?? 0,
-            _imageFile,
+          final DataUploadRepository _repository = DataUploadRepository();
+          bool _result = await _repository.uploadData(
+            claimNumber: widget.arguments.claim.claimNumber,
+            latitude: _locationData.latitude ?? 0,
+            longitude: _locationData.longitude ?? 0,
+            file: _imageFile,
           );
           if (_result) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("File uploaded successfully!"),
-                backgroundColor: Colors.green,
-              ),
-            );
-
+            showSnackBar(context, AppStrings.fileUploaded, type: SnackBarType.success);
             _imageFile.delete();
-            log("File deleted");
-            showInSnackBar('Picture saved to ${file.path}');
           }
         }
       }
@@ -653,7 +642,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Flash mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Flash mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -662,7 +651,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Exposure mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Exposure mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -671,7 +660,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Focus mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Focus mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -733,7 +722,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
   Future<XFile?> takePicture() async {
     final CameraController? cameraController = controller;
     if (cameraController == null || !cameraController.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      showSnackBar(context, 'Error: select a camera first.');
       return null;
     }
 
@@ -753,7 +742,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
 
   void _showCameraException(CameraException e) {
     log("${e.code}, ${e.description}");
-    showInSnackBar('Error: ${e.code}\n${e.description}');
+    showSnackBar(context, 'Error: ${e.code}\n${e.description}');
   }
 
   /// Returns a suitable camera icon for [direction].

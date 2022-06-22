@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 
-void showSnackBar(BuildContext context, String text, {bool isError = false}) {
+enum SnackBarType { none, success, error }
+
+void showSnackBar(BuildContext context, String text, {SnackBarType type = SnackBarType.none}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(text),
-      backgroundColor: isError ? Colors.red : null,
+      backgroundColor: _snackBarColor(type),
     ),
   );
+}
+
+Color? _snackBarColor(SnackBarType type) {
+  switch (type) {
+    case SnackBarType.none:
+      return null;
+    case SnackBarType.success:
+      return Colors.green;
+    case SnackBarType.error:
+      return Colors.red;
+  }
 }

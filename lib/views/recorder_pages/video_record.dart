@@ -5,6 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
+import 'package:rc_clone/widgets/snack_bar.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
 import '../../utilities/camera_utility.dart';
@@ -115,9 +117,9 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                 color: Colors.black,
                 border: Border.all(
                   color:
-                  controller != null && controller!.value.isRecordingVideo
-                      ? Colors.redAccent
-                      : Colors.grey,
+                      controller != null && controller!.value.isRecordingVideo
+                          ? Colors.redAccent
+                          : Colors.grey,
                   width: 3.0,
                 ),
               ),
@@ -166,14 +168,14 @@ class _VideoRecordPageState extends State<VideoRecordPage>
           controller!,
           child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onScaleStart: _handleScaleStart,
-                  onScaleUpdate: _handleScaleUpdate,
-                  onTapDown: (TapDownDetails details) =>
-                      onViewFinderTap(details, constraints),
-                );
-              }),
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onScaleStart: _handleScaleStart,
+              onScaleUpdate: _handleScaleUpdate,
+              onTapDown: (TapDownDetails details) =>
+                  onViewFinderTap(details, constraints),
+            );
+          }),
         ),
       );
     }
@@ -211,15 +213,13 @@ class _VideoRecordPageState extends State<VideoRecordPage>
             IconButton(
               icon: const Icon(Icons.exposure),
               color: Colors.red,
-              onPressed: controller != null
-                  ? onExposureModeButtonPressed
-                  : null,
+              onPressed:
+                  controller != null ? onExposureModeButtonPressed : null,
             ),
             IconButton(
               icon: const Icon(Icons.filter_center_focus),
               color: Colors.red,
-              onPressed:
-              controller != null ? onFocusModeButtonPressed : null,
+              onPressed: controller != null ? onFocusModeButtonPressed : null,
             ),
             IconButton(
               icon: Icon(enableAudio ? Icons.volume_up : Icons.volume_mute),
@@ -315,12 +315,12 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                     style: styleAuto,
                     onPressed: controller != null
                         ? () =>
-                        onSetExposureModeButtonPressed(ExposureMode.auto)
+                            onSetExposureModeButtonPressed(ExposureMode.auto)
                         : null,
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setExposurePoint(null);
-                        showInSnackBar('Resetting exposure point');
+                        showSnackBar(context, 'Resetting exposure point');
                       }
                     },
                     child: const Text('AUTO'),
@@ -329,7 +329,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                     style: styleLocked,
                     onPressed: controller != null
                         ? () =>
-                        onSetExposureModeButtonPressed(ExposureMode.locked)
+                            onSetExposureModeButtonPressed(ExposureMode.locked)
                         : null,
                     child: const Text('LOCKED'),
                   ),
@@ -356,7 +356,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                     max: _maxAvailableExposureOffset,
                     label: _currentExposureOffset.toString(),
                     onChanged: _minAvailableExposureOffset ==
-                        _maxAvailableExposureOffset
+                            _maxAvailableExposureOffset
                         ? null
                         : setExposureOffset,
                   ),
@@ -405,7 +405,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                       if (controller != null) {
                         controller!.setFocusPoint(null);
                       }
-                      showInSnackBar('Resetting focus point');
+                      showSnackBar(context, 'Resetting focus point');
                     },
                     child: const Text('AUTO'),
                   ),
@@ -437,31 +437,31 @@ class _VideoRecordPageState extends State<VideoRecordPage>
           icon: const Icon(Icons.videocam),
           color: Colors.red,
           onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              !cameraController.value.isRecordingVideo
+                  cameraController.value.isInitialized &&
+                  !cameraController.value.isRecordingVideo
               ? onVideoRecordButtonPressed
               : null,
         ),
         IconButton(
           icon: cameraController != null &&
-              cameraController.value.isRecordingPaused
+                  cameraController.value.isRecordingPaused
               ? const Icon(Icons.play_arrow)
               : const Icon(Icons.pause),
           color: Colors.red,
           onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              cameraController.value.isRecordingVideo
+                  cameraController.value.isInitialized &&
+                  cameraController.value.isRecordingVideo
               ? (cameraController.value.isRecordingPaused)
-              ? onResumeButtonPressed
-              : onPauseButtonPressed
+                  ? onResumeButtonPressed
+                  : onPauseButtonPressed
               : null,
         ),
         IconButton(
           icon: const Icon(Icons.stop),
           color: Colors.red,
           onPressed: cameraController != null &&
-              cameraController.value.isInitialized &&
-              cameraController.value.isRecordingVideo
+                  cameraController.value.isInitialized &&
+                  cameraController.value.isRecordingVideo
               ? onStopButtonPressed
               : null,
         ),
@@ -483,11 +483,12 @@ class _VideoRecordPageState extends State<VideoRecordPage>
 
     if (widget.arguments.cameras.isEmpty) {
       _ambiguate(SchedulerBinding.instance)?.addPostFrameCallback((_) async {
-        showInSnackBar('No camera found.');
+        showSnackBar(context, 'No camera found.', type: SnackBarType.error);
       });
       return const Text('None');
     } else {
-      for (final CameraDescription cameraDescription in widget.arguments.cameras) {
+      for (final CameraDescription cameraDescription
+          in widget.arguments.cameras) {
         toggles.add(
           SizedBox(
             width: 90.0,
@@ -496,9 +497,9 @@ class _VideoRecordPageState extends State<VideoRecordPage>
               groupValue: controller?.description,
               value: cameraDescription,
               onChanged:
-              controller != null && controller!.value.isRecordingVideo
-                  ? null
-                  : onChanged,
+                  controller != null && controller!.value.isRecordingVideo
+                      ? null
+                      : onChanged,
             ),
           ),
         );
@@ -509,11 +510,6 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   }
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
-
-  void showInSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
     if (controller == null) {
@@ -557,16 +553,16 @@ class _VideoRecordPageState extends State<VideoRecordPage>
         setState(() {});
       }
       if (cameraController.value.hasError) {
-        showInSnackBar(
-            'Camera error ${cameraController.value.errorDescription}');
+        showSnackBar(context, 'Camera error ${cameraController.value.errorDescription}', type: SnackBarType.error);
       }
     });
 
     try {
       await cameraController.initialize();
       await Future.wait(<Future<Object?>>[
-        cameraController.getMinExposureOffset().then(
-                (double value) => _minAvailableExposureOffset = value),
+        cameraController
+            .getMinExposureOffset()
+            .then((double value) => _minAvailableExposureOffset = value),
         cameraController
             .getMaxExposureOffset()
             .then((double value) => _maxAvailableExposureOffset = value),
@@ -580,30 +576,30 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     } on CameraException catch (e) {
       switch (e.code) {
         case 'CameraAccessDenied':
-          showInSnackBar('You have denied camera access.');
+          showSnackBar(context, 'You have denied camera access.', type: SnackBarType.error);
           break;
         case 'CameraAccessDeniedWithoutPrompt':
-        // iOS only
-          showInSnackBar('Please go to Settings app to enable camera access.');
+          // iOS only
+          showSnackBar(context, 'Please go to Settings app to enable camera access.', type: SnackBarType.error);
           break;
         case 'CameraAccessRestricted':
-        // iOS only
-          showInSnackBar('Camera access is restricted.');
+          // iOS only
+          showSnackBar(context, 'Camera access is restricted.', type: SnackBarType.error);
           break;
         case 'AudioAccessDenied':
-          showInSnackBar('You have denied audio access.');
+          showSnackBar(context, 'You have denied audio access.', type: SnackBarType.error);
           break;
         case 'AudioAccessDeniedWithoutPrompt':
-        // iOS only
-          showInSnackBar('Please go to Settings app to enable audio access.');
+          // iOS only
+          showSnackBar(context, 'Please go to Settings app to enable audio access.', type: SnackBarType.error);
           break;
         case 'AudioAccessRestricted':
-        // iOS only
-          showInSnackBar('Audio access is restricted.');
+          // iOS only
+          showSnackBar(context, 'Audio access is restricted.', type: SnackBarType.error);
           break;
         case 'cameraPermission':
-        // Android & web only
-          showInSnackBar('Unknown permission error.');
+          // Android & web only
+          showSnackBar(context, 'Unknown permission error.', type: SnackBarType.error);
           break;
         default:
           _showCameraException(e);
@@ -658,7 +654,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Flash mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Flash mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -667,7 +663,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Exposure mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Exposure mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -676,7 +672,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Focus mode set to ${mode.toString().split('.').last}');
+      showSnackBar(context, 'Focus mode set to ${mode.toString().split('.').last}');
     });
   }
 
@@ -695,30 +691,27 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       }
       if (file != null) {
         videoFile = file;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Starting upload"),
-            backgroundColor: Colors.green,
-          ),
-        );
         File _videoFile = File(videoFile!.path);
         LocationData _locationData = widget.arguments.locationData;
-        bool _result = await DataUploadRepository().uploadData(
-          widget.arguments.claim.claimNumber,
-          _locationData.latitude ?? 0,
-          _locationData.longitude ?? 0,
-          _videoFile,
+        final DataUploadRepository _repository = DataUploadRepository();
+        showSnackBar(
+          context,
+          AppStrings.startingUpload,
+          type: SnackBarType.success,
+        );
+        bool _result = await _repository.uploadData(
+          claimNumber: widget.arguments.claim.claimNumber,
+          latitude: _locationData.latitude ?? 0,
+          longitude: _locationData.longitude ?? 0,
+          file: _videoFile,
         );
         if (_result) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("File uploaded successfully!"),
-              backgroundColor: Colors.green,
-            ),
+          showSnackBar(
+            context,
+            AppStrings.fileUploaded,
+            type: SnackBarType.success,
           );
-
           _videoFile.delete();
-          log("File deleted");
         }
       }
     });
@@ -729,7 +722,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Video recording paused');
+      showSnackBar(context, 'Video recording paused');
     });
   }
 
@@ -738,7 +731,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       if (mounted) {
         setState(() {});
       }
-      showInSnackBar('Video recording resumed');
+      showSnackBar(context, 'Video recording resumed');
     });
   }
 
@@ -746,7 +739,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      showSnackBar(context, 'Error: select a camera first.');
       return;
     }
 
@@ -865,7 +858,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
 
   void _showCameraException(CameraException e) {
     log("${e.code}, ${e.description}");
-    showInSnackBar('Error: ${e.code}\n${e.description}');
+    showSnackBar(context, 'Error: ${e.code}\n${e.description}', type: SnackBarType.error);
   }
 
   /// Returns a suitable camera icon for [direction].
