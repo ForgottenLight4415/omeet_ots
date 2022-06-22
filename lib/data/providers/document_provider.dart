@@ -1,11 +1,12 @@
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:rc_clone/data/models/document.dart';
-import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/utilities/app_constants.dart';
 
-class MeetDocumentProvider extends AppServerProvider {
+import '../models/document.dart';
+import '../providers/app_server_provider.dart';
+import '../../utilities/app_constants.dart';
+
+class DocumentProvider extends AppServerProvider {
   Future<List<Document>> getDocumentList(String claimNumber) async {
     final Map<String, String> _data = <String, String> {
       "Claim_No": claimNumber,
@@ -37,8 +38,8 @@ class MeetDocumentProvider extends AppServerProvider {
     final List<dom.Element> obj = htmlDocument.getElementsByTagName('object');
     String? _link;
     for (var element in obj) {
-      _link = element.attributes['data'] ?? "";
+      _link = element.attributes['data'] ?? AppStrings.blank;
     }
-    return _link ?? "";
+    return _link ?? AppStrings.blank;
   }
 }

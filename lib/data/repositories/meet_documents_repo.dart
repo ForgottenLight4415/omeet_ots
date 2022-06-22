@@ -1,8 +1,8 @@
-import 'package:rc_clone/data/models/document.dart';
-import 'package:rc_clone/data/providers/meet_document_provider.dart';
+import '../models/document.dart';
+import '../providers/document_provider.dart';
 
 class MeetDocumentsRepository {
-  final MeetDocumentProvider _provider = MeetDocumentProvider();
+  final DocumentProvider _provider = DocumentProvider();
 
   Future<List<Document>> getDocumentList(String claimNumber) =>
       _provider.getDocumentList(claimNumber);

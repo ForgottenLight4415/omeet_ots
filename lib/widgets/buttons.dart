@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rc_clone/widgets/scaling_tile.dart';
+
+import './scaling_tile.dart';
 
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,20 +14,28 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: onPressed,
-        child: Text(label),
-        style: ButtonStyle(
-            shape: MaterialStateProperty.resolveWith(
-              (states) => RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.0)),
-            ),
-            textStyle:
-                MaterialStateProperty.resolveWith((states) => const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w300,
-                    )),
-            padding: MaterialStateProperty.resolveWith((states) =>
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0))));
+      onPressed: onPressed,
+      child: Text(label),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.resolveWith(
+          (states) => RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+        ),
+        textStyle: MaterialStateProperty.resolveWith(
+          (states) => TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+        padding: MaterialStateProperty.resolveWith(
+          (states) => EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 15.h,
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -70,6 +80,20 @@ class VideoMeetToggleButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class AppBackButton extends StatelessWidget {
+  const AppBackButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(CupertinoIcons.back),
     );
   }
 }

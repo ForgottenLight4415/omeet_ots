@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rc_clone/views/meet_pages/documents_section.dart';
+
+import '../views/meet_pages/documents_section.dart';
+import '../widgets/buttons.dart';
 
 class DocumentsPage extends StatelessWidget {
   final String claimNumber;
@@ -9,9 +11,10 @@ class DocumentsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: const Text("All documents"),
       ),
-      body: MeetDocumentsScreen(claimNumber: claimNumber),
+      body: DocumentsView(claimNumber: claimNumber),
     );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/meet_page_bloc/document_cubit/view_document_cubit.dart';
-import 'package:rc_clone/widgets/loading_widget.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import '../blocs/meet_page_bloc/document_cubit/view_document_cubit.dart';
+import '../widgets/loading_widget.dart';
+
+import '../widgets/buttons.dart';
 import '../widgets/error_widget.dart';
 
 class PDFViewPage extends StatefulWidget {
@@ -30,6 +32,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const AppBackButton(),
         title: const Text("Document viewer"),
         actions: <Widget>[
           BlocProvider<ViewDocumentCubit>.value(

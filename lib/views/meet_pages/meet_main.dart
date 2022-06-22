@@ -5,6 +5,7 @@ import 'package:rc_clone/views/meet_pages/details_section.dart';
 import 'package:rc_clone/views/meet_pages/documents_section.dart';
 import 'package:rc_clone/views/meet_pages/questions_section.dart';
 import 'package:rc_clone/views/meet_pages/meet_section.dart';
+import 'package:rc_clone/widgets/buttons.dart';
 
 class MeetingMainPage extends StatefulWidget {
   final Claim claim;
@@ -22,6 +23,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
+          leading: const AppBackButton(),
           centerTitle: true,
           title: Text("Meeting with ${widget.claim.insuredName}"),
           bottom: const TabBar(
@@ -37,7 +39,7 @@ class _MeetingMainPageState extends State<MeetingMainPage> {
           children: [
             VideoMeetPage(claim: widget.claim),
             QuestionsPage(claimNumber: widget.claim.claimNumber),
-            MeetDocumentsScreen(claimNumber: widget.claim.claimNumber),
+            DocumentsView(claimNumber: widget.claim.claimNumber),
             const MeetDetails()
           ],
         ),

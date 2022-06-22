@@ -42,9 +42,12 @@ class AppStrings {
   static const String locationExplanation = "Location access is needed to access this feature.";
   static const String locationPermExplanation = "Location permission is needed to access this feature.";
   static const String locationPermExplanationB = "Location permission is needed to access this feature. Grant permission in settings?";
+  static const String camMicStoragePerm = "Camera, microphone and storage permission is required to access this feature.";
   static const String locationError = "Location is not enabled or permission is not granted";
   static const String fileUploaded = "File uploaded successfully";
   static const String fileUploadFailed = "Failed to upload the files.";
+  static const String startRecording = "Start recording";
+  static const String stopRecording = "Stop recording";
 
   // IMAGE LINKS
   static const String noDataImage = "images/no-data.svg";
@@ -55,6 +58,8 @@ class AppStrings {
 
   // APP TEXT
   static const String claimsLoading = "Getting claims...";
+  static const String loading = "Loading...";
+  static const String connecting = "Connecting to call service...";
   static const String noClaims = "No claims";
   static const String primary = "Primary";
   static const String secondary = "Secondary";
@@ -63,5 +68,5 @@ class AppStrings {
   static const String customerAddress = "Customer address";
   static const String phoneNumber = "Phone number: ";
   static const String phoneNumberAlt = "Alternate phone number: ";
-  static const String recieveCall = "You'll receive a call soon.";
+  static const String receiveCall = "You'll receive a call soon.";
 }
