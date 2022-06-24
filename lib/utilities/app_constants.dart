@@ -70,6 +70,7 @@ class AppStrings {
   static const String voiceCall = "Voice call";
   static const String receiveCall = "You'll receive a call soon.";
   static const String startingUpload = "Starting upload";
+  static const String signingIn = "Signing in...";
 
   // DETAILS
   static const String customerName = "Customer name";

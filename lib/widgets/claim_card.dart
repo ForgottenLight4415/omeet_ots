@@ -327,9 +327,14 @@ class _ClaimCardState extends State<ClaimCard> {
   }
 
   String _createAddress(String city, String state) {
-    if (city == AppStrings.unavailable || state == AppStrings.unavailable) {
+    if (city != AppStrings.unavailable && state != AppStrings.unavailable) {
+      return "$city, $state";
+    } else if (city != AppStrings.unavailable) {
+      return city;
+    } else if (state != AppStrings.unavailable) {
+      return state;
+    } else {
       return AppStrings.unavailable;
     }
-    return "$city, $state";
   }
 }

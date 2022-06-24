@@ -18,9 +18,11 @@ class DataUploadProvider extends AppServerProvider {
     _request.headers.addAll({
       "Content-Type": "multipart/form-data",
     });
-    _request.fields['Claim_No'] = claimNumber;
-    _request.fields['lat'] = latitude.toString();
-    _request.fields['long'] = longitude.toString();
+    _request.fields.addAll(<String, String> {
+      'Claim_No' : claimNumber,
+      'lat' : latitude.toString(),
+      'long' : longitude.toString(),
+    });
     _request.files.add(await MultipartFile.fromPath('anyfile', file.path));
     Response _multipartResponse = await Response.fromStream(
       await _request.send(),

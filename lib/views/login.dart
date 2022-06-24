@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rc_clone/blocs/auth_bloc/auth_cubit.dart';
+import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:rc_clone/utilities/check_connection.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/widgets/input_fields.dart';
+import 'package:rc_clone/widgets/loading_widget.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -59,11 +61,12 @@ class _SignInPageState extends State<SignInPage> {
       data: Theme.of(context).copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
-              padding: MaterialStateProperty.resolveWith(
-                (states) =>
-                    EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
+                padding: MaterialStateProperty.resolveWith(
+                  (states) =>
+                      EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
+                ),
+                elevation: MaterialStateProperty.resolveWith((states) => 5.0),
               ),
-              elevation: MaterialStateProperty.resolveWith((states) => 5.0)),
         ),
       ),
       child: Scaffold(
@@ -72,7 +75,7 @@ class _SignInPageState extends State<SignInPage> {
             crossFadeState: _crossFadeState,
             duration: const Duration(milliseconds: 500),
             firstChild: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -82,6 +85,7 @@ class _SignInPageState extends State<SignInPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
+                            // LOGO
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 50.h),
                               child: Image.asset(
@@ -90,6 +94,7 @@ class _SignInPageState extends State<SignInPage> {
                                 width: 170.w,
                               ),
                             ),
+                            // LOGIN Text
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -101,15 +106,17 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               ),
                             ),
+                            // LOGIN SUB Text
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 "Sign in to continue",
                                 style: TextStyle(
-                                    fontSize: 22.sp,
-                                    fontFamily: 'Nunito',
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black54),
+                                  fontSize: 22.sp,
+                                  fontFamily: 'Nunito',
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black54,
+                                ),
                               ),
                             ),
                             SizedBox(height: 30.h),
@@ -125,18 +132,17 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                             SizedBox(height: 15.h),
                             CustomTextFormField(
-                              textEditingController: _passwordController,
-                              textInputAction: TextInputAction.go,
-                              focusNode: _passFocusNode,
-                              label: "Password",
-                              hintText: "Enter your password",
-                              borderColor: _passBorderColor,
-                              validator: _isPasswordValid,
-                              obscureText: true,
-                              onFieldSubmitted: (value) {
-                                _signIn();
-                              }
-                            ),
+                                textEditingController: _passwordController,
+                                textInputAction: TextInputAction.go,
+                                focusNode: _passFocusNode,
+                                label: "Password",
+                                hintText: "Enter your password",
+                                borderColor: _passBorderColor,
+                                validator: _isPasswordValid,
+                                obscureText: true,
+                                onFieldSubmitted: (value) {
+                                  _signIn();
+                                }),
                             SizedBox(height: 30.h),
                             BlocProvider<AuthCubit>.value(
                               value: _authCubit!,
@@ -156,7 +162,9 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
             ),
-            secondChild: const Center(child: CircularProgressIndicator()),
+            secondChild: const LoadingWidget(
+              label: AppStrings.signingIn,
+            ),
             layoutBuilder:
                 (topChild, topChildKey, bottomChild, bottomChildKey) {
               return Stack(

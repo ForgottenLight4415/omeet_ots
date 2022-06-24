@@ -13,8 +13,8 @@ class MeetDetails extends StatefulWidget {
   State<MeetDetails> createState() => _MeetDetailsState();
 }
 
-class _MeetDetailsState extends State<MeetDetails> with AutomaticKeepAliveClientMixin<MeetDetails> {
-
+class _MeetDetailsState extends State<MeetDetails>
+    with AutomaticKeepAliveClientMixin<MeetDetails> {
   @override
   bool get wantKeepAlive {
     return true;
@@ -24,66 +24,69 @@ class _MeetDetailsState extends State<MeetDetails> with AutomaticKeepAliveClient
   Widget build(BuildContext context) {
     super.build(context);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              widget.claim.claimNumber,
-              softWrap: true,
-              maxLines: 2,
-              overflow: TextOverflow.fade,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline3!.copyWith(
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).primaryColor,
+      padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                widget.claim.claimNumber,
+                softWrap: true,
+                maxLines: 2,
                 overflow: TextOverflow.fade,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline3!.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).primaryColor,
+                      overflow: TextOverflow.fade,
+                    ),
               ),
             ),
-          ),
-          SizedBox(height: 10.h),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CardDetailText(
-                title: AppStrings.customerName,
-                content: widget.claim.insuredName,
-              ),
-              CardDetailText(
-                title: AppStrings.customerAddress,
-                content: _createAddress(
-                  widget.claim.insuredCity,
-                  widget.claim.insuredState,
-                ),
-              ),
-              CardDetailText(
-                title: AppStrings.phoneNumber,
-                content: widget.claim.insuredContactNumber,
-              ),
-              CardDetailText(
-                title: AppStrings.phoneNumberAlt,
-                content:
-                widget.claim.insuredAltContactNumber != AppStrings.blank
-                    ? widget.claim.insuredAltContactNumber
-                    : AppStrings.unavailable,
-              ),
-              CardDetailText(
-                title: AppStrings.emailAddress,
-                content: widget.claim.email
-              ),
-            ],
-          ),
-        ],
+            SizedBox(height: 10.h),
+          ] + _allDetails(),
+        ),
       ),
     );
   }
 
-  String _createAddress(String city, String state) {
-    if (city == AppStrings.unavailable || state == AppStrings.unavailable) {
-      return AppStrings.unavailable;
-    }
-    return "$city, $state";
+  List<Widget> _detailsWidget(String key) {
+    Map<String, Map<String, dynamic>> _mainMap = widget.claim.toMap();
+    return _mainMap[key]!.entries.map(
+      (entry) => CardDetailText(
+        title: entry.key,
+        content: entry.value != AppStrings.blank
+          ? entry.value
+          : AppStrings.unavailable,
+      ),
+    ).toList();
+  }
+
+  List<Widget> _allDetails() {
+    Map<String, Map<String, dynamic>> _mainMap = widget.claim.toMap();
+    return _mainMap.entries.map(
+          (entry) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  entry.key,
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline4!.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).primaryColor,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.h),
+            ] + _detailsWidget(entry.key),
+          ),
+    ).toList();
   }
 }
