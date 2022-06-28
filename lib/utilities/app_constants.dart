@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String baseUrl = "omeet.in";
+  static const String baseUrl = "omeet.in/BAGIC_Motor_Claim_Investigation";
   static const String bridgeCallBaseUrl = "godjn.slashrtc.in";
 
   static const String loginUrl = "api/loginm.php";
