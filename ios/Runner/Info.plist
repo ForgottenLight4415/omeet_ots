@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Rc Clone</string>
+	<string>OMeet</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -43,5 +43,20 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+	<key>NSCameraUsageDescription</key>
+    <string>We need camera permission to take pictures and record videos.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone permission to record audio for future reference.</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need location permission to geotag audio, video and pictures.</string>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>https</string>
+      <string>tel</string>
+      <string>mailto</string>
+    </array>
 </dict>
 </plist>
