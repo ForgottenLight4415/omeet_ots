@@ -22,8 +22,7 @@ class VideoMeetPage extends StatefulWidget {
   State<VideoMeetPage> createState() => _VideoMeetPageState();
 }
 
-class _VideoMeetPageState extends State<VideoMeetPage>
-    with AutomaticKeepAliveClientMixin<VideoMeetPage> {
+class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveClientMixin<VideoMeetPage> {
   // Video meet settings
   VideoMeetStatus _status = VideoMeetStatus.none;
   bool _isAudioOnly = false;
@@ -55,9 +54,9 @@ class _VideoMeetPageState extends State<VideoMeetPage>
 
   TextStyle customBodyTextOne(BuildContext context) {
     return Theme.of(context).textTheme.bodyText1!.copyWith(
-      fontWeight: FontWeight.w500,
-      color: Colors.white,
-    );
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        );
   }
 
   @override
@@ -106,8 +105,8 @@ class _VideoMeetPageState extends State<VideoMeetPage>
           "Tap \"Start meeting\" to join the meet",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5!.copyWith(
-              fontFamily: 'Open Sans',
-          ),
+                fontFamily: 'Open Sans',
+              ),
         ),
         SizedBox(height: 10.h),
         Text(
@@ -231,8 +230,7 @@ class _VideoMeetPageState extends State<VideoMeetPage>
         FeatureFlagEnum.RECORDING_ENABLED: false,
       };
       var options = JitsiMeetingOptions(room: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}")
-        ..serverURL =
-            "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
+        ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "OMeet Agent"
         ..userEmail = await AuthenticationProvider.getEmail()

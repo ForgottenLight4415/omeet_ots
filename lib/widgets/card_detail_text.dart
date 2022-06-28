@@ -5,7 +5,8 @@ class CardDetailText extends StatelessWidget {
   final String title;
   final String content;
 
-  const CardDetailText({Key? key,
+  const CardDetailText({
+    Key? key,
     required this.title,
     required this.content,
   }) : super(key: key);
@@ -18,16 +19,14 @@ class CardDetailText extends StatelessWidget {
           text: TextSpan(
               text: title + '\n',
               style: Theme.of(context).textTheme.headline6!.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              children: <TextSpan> [
-                TextSpan(
-                  text: content,
-                  style: Theme.of(context).textTheme.bodyText1,
-                )
-              ]
-          )
-      ),
+                    fontWeight: FontWeight.w600,
+                  ),
+              children: <TextSpan>[
+            TextSpan(
+              text: content,
+              style: Theme.of(context).textTheme.bodyText1,
+            )
+          ])),
     );
   }
 }

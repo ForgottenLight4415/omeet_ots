@@ -5,8 +5,8 @@ import '/utilities/app_constants.dart';
 
 class HomeProvider extends AppServerProvider {
   Future<List<Claim>> getClaims() async {
-    final Map<String, String> _data = <String, String> {
-      "email" : await AuthenticationProvider.getEmail(),
+    final Map<String, String> _data = <String, String>{
+      "email": await AuthenticationProvider.getEmail(),
     };
     final DecodedResponse _response = await postRequest(
       path: AppStrings.getClaimsUrl,

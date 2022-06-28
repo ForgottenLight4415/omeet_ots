@@ -7,12 +7,7 @@ class ClaimPageTiles extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const ClaimPageTiles(
-      {Key? key,
-      required this.faIcon,
-      required this.label,
-      required this.onPressed})
-      : super(key: key);
+  const ClaimPageTiles({Key? key, required this.faIcon, required this.label, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -17,7 +17,6 @@ class AppStrings {
   // MEET DOCUMENTS SECTION
   static const String getDocumentsUrl = "api/documents.php";
 
-
   // MEET QUESTIONS SECTION
   static const String getQuestionsUrl = "api/allquestions.php";
   static const String submitAnswersUrl = "api/allquestionanswers.php";

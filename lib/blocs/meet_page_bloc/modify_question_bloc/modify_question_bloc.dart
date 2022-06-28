@@ -7,12 +7,10 @@ import 'package:rc_clone/data/models/question.dart';
 part 'modify_question_event.dart';
 part 'modify_question_state.dart';
 
-class ModifyQuestionBloc
-    extends Bloc<ModifyQuestionEvent, ModifyQuestionState> {
+class ModifyQuestionBloc extends Bloc<ModifyQuestionEvent, ModifyQuestionState> {
   final Question question;
 
-  ModifyQuestionBloc({required this.question})
-      : super(ModifyQuestionState(question: question)) {
+  ModifyQuestionBloc({required this.question}) : super(ModifyQuestionState(question: question)) {
     on<ModifyQuestion>(_modifyQuestion);
     on<ToggleFlag>(_toggleFlag);
     on<AnswerQuestion>(_answerQuestion);

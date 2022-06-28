@@ -4,9 +4,9 @@ class Document {
   final String fileName;
   final String uploadDateTime;
 
-  Document.fromJson(Map<String, dynamic> decodedJson) :
-      id = int.parse(decodedJson["id"]),
-      claimNumber = decodedJson['claim_no'],
-      fileName = "https://omeet.in/documents/s3jaya/displaydocs.php?vurl=" + decodedJson["targetfolder"].replaceAll(' ', '%20'),
-      uploadDateTime = decodedJson['uploaddatetime'];
+  Document.fromJson(Map<String, dynamic> decodedJson)
+      : id = int.parse(decodedJson["id"]),
+        claimNumber = decodedJson['claim_no'],
+        fileName = "https://omeet.in/documents/s3jaya/displaydocs.php?vurl=" + decodedJson["targetfolder"].replaceAll(' ', '%20'),
+        uploadDateTime = decodedJson['uploaddatetime'];
 }

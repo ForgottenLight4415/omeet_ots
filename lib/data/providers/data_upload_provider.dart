@@ -7,10 +7,7 @@ import '../../utilities/app_constants.dart';
 
 class DataUploadProvider extends AppServerProvider {
   Future<bool> uploadVideoCapture(
-      {required String claimNumber,
-      required double latitude,
-      required double longitude,
-      required File file}) async {
+      {required String claimNumber, required double latitude, required double longitude, required File file}) async {
     final MultipartRequest _request = MultipartRequest(
       "POST",
       Uri.https(AppStrings.baseUrl, AppStrings.uploadVideoUrl),
@@ -18,10 +15,10 @@ class DataUploadProvider extends AppServerProvider {
     _request.headers.addAll({
       "Content-Type": "multipart/form-data",
     });
-    _request.fields.addAll(<String, String> {
-      'Claim_No' : claimNumber,
-      'lat' : latitude.toString(),
-      'long' : longitude.toString(),
+    _request.fields.addAll(<String, String>{
+      'Claim_No': claimNumber,
+      'lat': latitude.toString(),
+      'long': longitude.toString(),
     });
     _request.files.add(await MultipartFile.fromPath('anyfile', file.path));
     Response _multipartResponse = await Response.fromStream(

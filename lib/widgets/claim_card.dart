@@ -20,8 +20,7 @@ class ClaimCard extends StatefulWidget {
   final Claim claim;
   final ScreenRecorder screenRecorder;
 
-  const ClaimCard({Key? key, required this.claim, required this.screenRecorder})
-      : super(key: key);
+  const ClaimCard({Key? key, required this.claim, required this.screenRecorder}) : super(key: key);
 
   @override
   State<ClaimCard> createState() => _ClaimCardState();
@@ -71,10 +70,9 @@ class _ClaimCardState extends State<ClaimCard> {
                   ),
                   CardDetailText(
                     title: AppStrings.phoneNumberAlt,
-                    content:
-                        widget.claim.insuredAltContactNumber != AppStrings.blank
-                            ? widget.claim.insuredAltContactNumber
-                            : AppStrings.unavailable,
+                    content: widget.claim.insuredAltContactNumber != AppStrings.blank
+                        ? widget.claim.insuredAltContactNumber
+                        : AppStrings.unavailable,
                   ),
                   SizedBox(height: 15.h),
                   Row(
@@ -270,8 +268,7 @@ class _ClaimCardState extends State<ClaimCard> {
                     widget.claim.claimNumber,
                   );
                 } else {
-                  if (widget.screenRecorder.claimNumber !=
-                      widget.claim.claimNumber) {
+                  if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
                     showDialog(
                       context: context,
                       builder: (dialogContext) => AlertDialog(

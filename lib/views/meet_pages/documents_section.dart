@@ -14,8 +14,7 @@ class DocumentsView extends StatefulWidget {
   State<DocumentsView> createState() => _DocumentsViewState();
 }
 
-class _DocumentsViewState extends State<DocumentsView>
-    with AutomaticKeepAliveClientMixin<DocumentsView> {
+class _DocumentsViewState extends State<DocumentsView> with AutomaticKeepAliveClientMixin<DocumentsView> {
   @override
   bool get wantKeepAlive {
     return true;
@@ -49,8 +48,7 @@ class _DocumentsViewState extends State<DocumentsView>
             return CustomErrorWidget(
               errorText: "Exception: ${state.cause} (${state.code})",
               action: () {
-                BlocProvider.of<GetDocumentCubit>(context)
-                    .getDocuments(widget.claimNumber);
+                BlocProvider.of<GetDocumentCubit>(context).getDocuments(widget.claimNumber);
               },
             );
           } else {

@@ -21,8 +21,7 @@ class VideoRecordPage extends StatefulWidget {
   State<VideoRecordPage> createState() => _VideoRecordPageState();
 }
 
-class _VideoRecordPageState extends State<VideoRecordPage>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
   XFile? videoFile;
   bool enableAudio = true;
@@ -116,10 +115,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
               decoration: BoxDecoration(
                 color: Colors.black,
                 border: Border.all(
-                  color:
-                      controller != null && controller!.value.isRecordingVideo
-                          ? Colors.redAccent
-                          : Colors.grey,
+                  color: controller != null && controller!.value.isRecordingVideo ? Colors.redAccent : Colors.grey,
                   width: 3.0,
                 ),
               ),
@@ -166,14 +162,12 @@ class _VideoRecordPageState extends State<VideoRecordPage>
         onPointerUp: (_) => _pointers--,
         child: CameraPreview(
           controller!,
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
+          child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onScaleStart: _handleScaleStart,
               onScaleUpdate: _handleScaleUpdate,
-              onTapDown: (TapDownDetails details) =>
-                  onViewFinderTap(details, constraints),
+              onTapDown: (TapDownDetails details) => onViewFinderTap(details, constraints),
             );
           }),
         ),
@@ -191,8 +185,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       return;
     }
 
-    _currentScale = (_baseScale * details.scale)
-        .clamp(_minAvailableZoom, _maxAvailableZoom);
+    _currentScale = (_baseScale * details.scale).clamp(_minAvailableZoom, _maxAvailableZoom);
 
     await controller!.setZoomLevel(_currentScale);
   }
@@ -213,8 +206,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
             IconButton(
               icon: const Icon(Icons.exposure),
               color: Colors.red,
-              onPressed:
-                  controller != null ? onExposureModeButtonPressed : null,
+              onPressed: controller != null ? onExposureModeButtonPressed : null,
             ),
             IconButton(
               icon: const Icon(Icons.filter_center_focus),
@@ -245,39 +237,23 @@ class _VideoRecordPageState extends State<VideoRecordPage>
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.flash_off),
-              color: controller?.value.flashMode == FlashMode.off
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.off)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.off ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.off) : null,
             ),
             IconButton(
               icon: const Icon(Icons.flash_auto),
-              color: controller?.value.flashMode == FlashMode.auto
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.auto)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.auto ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.auto) : null,
             ),
             IconButton(
               icon: const Icon(Icons.flash_on),
-              color: controller?.value.flashMode == FlashMode.always
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.always)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.always ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.always) : null,
             ),
             IconButton(
               icon: const Icon(Icons.highlight),
-              color: controller?.value.flashMode == FlashMode.torch
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.torch)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.torch ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.torch) : null,
             ),
           ],
         ),
@@ -287,14 +263,10 @@ class _VideoRecordPageState extends State<VideoRecordPage>
 
   Widget _exposureModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.auto
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.exposureMode == ExposureMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.locked
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.exposureMode == ExposureMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(
@@ -313,10 +285,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                 children: <Widget>[
                   TextButton(
                     style: styleAuto,
-                    onPressed: controller != null
-                        ? () =>
-                            onSetExposureModeButtonPressed(ExposureMode.auto)
-                        : null,
+                    onPressed: controller != null ? () => onSetExposureModeButtonPressed(ExposureMode.auto) : null,
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setExposurePoint(null);
@@ -327,17 +296,12 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () =>
-                            onSetExposureModeButtonPressed(ExposureMode.locked)
-                        : null,
+                    onPressed: controller != null ? () => onSetExposureModeButtonPressed(ExposureMode.locked) : null,
                     child: const Text('LOCKED'),
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () => controller!.setExposureOffset(0.0)
-                        : null,
+                    onPressed: controller != null ? () => controller!.setExposureOffset(0.0) : null,
                     child: const Text('RESET OFFSET'),
                   ),
                 ],
@@ -355,10 +319,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                     min: _minAvailableExposureOffset,
                     max: _maxAvailableExposureOffset,
                     label: _currentExposureOffset.toString(),
-                    onChanged: _minAvailableExposureOffset ==
-                            _maxAvailableExposureOffset
-                        ? null
-                        : setExposureOffset,
+                    onChanged: _minAvailableExposureOffset == _maxAvailableExposureOffset ? null : setExposureOffset,
                   ),
                   Text(_maxAvailableExposureOffset.toString()),
                 ],
@@ -372,14 +333,10 @@ class _VideoRecordPageState extends State<VideoRecordPage>
 
   Widget _focusModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.auto
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.focusMode == FocusMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.locked
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.focusMode == FocusMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(
@@ -398,9 +355,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                 children: <Widget>[
                   TextButton(
                     style: styleAuto,
-                    onPressed: controller != null
-                        ? () => onSetFocusModeButtonPressed(FocusMode.auto)
-                        : null,
+                    onPressed: controller != null ? () => onSetFocusModeButtonPressed(FocusMode.auto) : null,
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setFocusPoint(null);
@@ -411,9 +366,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () => onSetFocusModeButtonPressed(FocusMode.locked)
-                        : null,
+                    onPressed: controller != null ? () => onSetFocusModeButtonPressed(FocusMode.locked) : null,
                     child: const Text('LOCKED'),
                   ),
                 ],
@@ -436,21 +389,15 @@ class _VideoRecordPageState extends State<VideoRecordPage>
         IconButton(
           icon: const Icon(Icons.videocam),
           color: Colors.red,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  !cameraController.value.isRecordingVideo
+          onPressed: cameraController != null && cameraController.value.isInitialized && !cameraController.value.isRecordingVideo
               ? onVideoRecordButtonPressed
               : null,
         ),
         IconButton(
-          icon: cameraController != null &&
-                  cameraController.value.isRecordingPaused
-              ? const Icon(Icons.play_arrow)
-              : const Icon(Icons.pause),
+          icon:
+              cameraController != null && cameraController.value.isRecordingPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
           color: Colors.red,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
+          onPressed: cameraController != null && cameraController.value.isInitialized && cameraController.value.isRecordingVideo
               ? (cameraController.value.isRecordingPaused)
                   ? onResumeButtonPressed
                   : onPauseButtonPressed
@@ -459,9 +406,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
         IconButton(
           icon: const Icon(Icons.stop),
           color: Colors.red,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
+          onPressed: cameraController != null && cameraController.value.isInitialized && cameraController.value.isRecordingVideo
               ? onStopButtonPressed
               : null,
         ),
@@ -487,8 +432,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
       });
       return const Text('None');
     } else {
-      for (final CameraDescription cameraDescription
-          in widget.arguments.cameras) {
+      for (final CameraDescription cameraDescription in widget.arguments.cameras) {
         toggles.add(
           SizedBox(
             width: 90.0,
@@ -496,10 +440,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
               title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
               groupValue: controller?.description,
               value: cameraDescription,
-              onChanged:
-                  controller != null && controller!.value.isRecordingVideo
-                      ? null
-                      : onChanged,
+              onChanged: controller != null && controller!.value.isRecordingVideo ? null : onChanged,
             ),
           ),
         );
@@ -560,18 +501,10 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     try {
       await cameraController.initialize();
       await Future.wait(<Future<Object?>>[
-        cameraController
-            .getMinExposureOffset()
-            .then((double value) => _minAvailableExposureOffset = value),
-        cameraController
-            .getMaxExposureOffset()
-            .then((double value) => _maxAvailableExposureOffset = value),
-        cameraController
-            .getMaxZoomLevel()
-            .then((double value) => _maxAvailableZoom = value),
-        cameraController
-            .getMinZoomLevel()
-            .then((double value) => _minAvailableZoom = value),
+        cameraController.getMinExposureOffset().then((double value) => _minAvailableExposureOffset = value),
+        cameraController.getMaxExposureOffset().then((double value) => _maxAvailableExposureOffset = value),
+        cameraController.getMaxZoomLevel().then((double value) => _maxAvailableZoom = value),
+        cameraController.getMinZoomLevel().then((double value) => _minAvailableZoom = value),
       ]);
     } on CameraException catch (e) {
       switch (e.code) {

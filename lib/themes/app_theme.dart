@@ -27,10 +27,7 @@ class AppTheme {
       ),
       headline2: TextStyle(fontSize: 30.sp),
       headline3: TextStyle(fontSize: 28.sp),
-      headline4: TextStyle(
-        fontSize: 26.sp,
-        fontWeight: FontWeight.w700
-      ),
+      headline4: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.w700),
       headline5: TextStyle(
         fontSize: 24.sp,
         fontFamily: 'Nunito',
@@ -61,7 +58,8 @@ class AppTheme {
       fillColor: Colors.white,
       filled: true,
       border: UnderlineInputBorder(
-          borderRadius: _borderRadius, borderSide: BorderSide.none,
+        borderRadius: _borderRadius,
+        borderSide: BorderSide.none,
       ),
     ),
     cardTheme: CardTheme(

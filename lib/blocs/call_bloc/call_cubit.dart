@@ -10,9 +10,7 @@ part 'call_state.dart';
 class CallCubit extends Cubit<CallState> {
   CallCubit() : super(CallInitial());
 
-  void callClient({required String claimNumber,
-    required String phoneNumber,
-    required String customerName}) async {
+  void callClient({required String claimNumber, required String phoneNumber, required String customerName}) async {
     emit(CallLoading());
     final CallRepository _callRepo = CallRepository();
     try {

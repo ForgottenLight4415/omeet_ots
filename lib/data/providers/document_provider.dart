@@ -8,7 +8,7 @@ import '../../utilities/app_constants.dart';
 
 class DocumentProvider extends AppServerProvider {
   Future<List<Document>> getDocumentList(String claimNumber) async {
-    final Map<String, String> _data = <String, String> {
+    final Map<String, String> _data = <String, String>{
       "Claim_No": claimNumber,
     };
     final DecodedResponse _response = await postRequest(

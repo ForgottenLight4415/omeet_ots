@@ -22,9 +22,9 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } on SocketException {
       emit(AuthFailed(1000, "Failed to connect the server."));
-    } on ServerException catch(a) {
+    } on ServerException catch (a) {
       emit(AuthFailed(a.code, a.cause));
-    }catch (e) {
+    } catch (e) {
       emit(AuthFailed(2000, e.toString()));
     }
   }

@@ -5,8 +5,7 @@ class ModifyQuestionState {
 
   ModifyQuestionState({required this.question});
 
-  ModifyQuestionState copyWith({Question? question})
-    => ModifyQuestionState(
-      question: question ?? this.question,
-    );
+  ModifyQuestionState copyWith({Question? question}) => ModifyQuestionState(
+        question: question ?? this.question,
+      );
 }

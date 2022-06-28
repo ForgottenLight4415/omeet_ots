@@ -64,10 +64,10 @@ class InformationWidget extends StatelessWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.headline5!.copyWith(
-                fontFamily: AppStrings.secondaryFontFam,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
-            ),
+                  fontFamily: AppStrings.secondaryFontFam,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black54,
+                ),
           ),
         ],
       ),

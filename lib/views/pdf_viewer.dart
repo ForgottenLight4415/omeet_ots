@@ -50,8 +50,7 @@ class _PDFViewPageState extends State<PDFViewPage> {
                       _pdfViewerKey.currentState?.openBookmarkView();
                     },
                   );
-                }
-                else {
+                } else {
                   return const SizedBox();
                 }
               },
@@ -60,22 +59,25 @@ class _PDFViewPageState extends State<PDFViewPage> {
         ],
       ),
       body: BlocProvider<ViewDocumentCubit>.value(
-        value: _cubit!
-          ..viewDocument(widget.documentUrl),
+        value: _cubit!..viewDocument(widget.documentUrl),
         child: BlocBuilder<ViewDocumentCubit, ViewDocumentState>(
           builder: (context, state) {
             if (state is ViewDocumentReady) {
-              return SfPdfViewer.network(state.docUrl, key: _pdfViewerKey,);
+              return SfPdfViewer.network(
+                state.docUrl,
+                key: _pdfViewerKey,
+              );
             } else if (state is ViewDocumentFailed) {
               return CustomErrorWidget(
                 errorText: state.cause + "\n(Error code: ${state.code})",
                 action: () {
-                  BlocProvider.of<ViewDocumentCubit>(context).viewDocument(
-                      widget.documentUrl);
+                  BlocProvider.of<ViewDocumentCubit>(context).viewDocument(widget.documentUrl);
                 },
               );
             } else {
-              return const LoadingWidget(label: "Fetching document",);
+              return const LoadingWidget(
+                label: "Fetching document",
+              );
             }
           },
         ),

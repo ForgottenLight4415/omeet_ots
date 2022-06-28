@@ -8,8 +8,7 @@ Future<bool> checkConnection(BuildContext context) async {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title:
-            const Text(AppStrings.noInternet),
+            title: const Text(AppStrings.noInternet),
             content: const Text(
               AppStrings.looksLikeOffline + AppStrings.offlineSolution,
               textAlign: TextAlign.justify,
@@ -22,9 +21,7 @@ Future<bool> checkConnection(BuildContext context) async {
                 child: const Text(AppStrings.ok),
               )
             ],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24.0)
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
           );
         });
     return false;

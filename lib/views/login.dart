@@ -33,14 +33,12 @@ class _SignInPageState extends State<SignInPage> {
     _passwordController = TextEditingController();
     _passFocusNode.addListener(() {
       setState(() {
-        _passBorderColor =
-            _passFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
+        _passBorderColor = _passFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
       });
     });
     _emailFocusNode.addListener(() {
       setState(() {
-        _emailBorderColor =
-            _emailFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
+        _emailBorderColor = _emailFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
       });
     });
   }
@@ -62,8 +60,7 @@ class _SignInPageState extends State<SignInPage> {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
                 padding: MaterialStateProperty.resolveWith(
-                  (states) =>
-                      EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
+                  (states) => EdgeInsets.symmetric(horizontal: 70.w, vertical: 16.h),
                 ),
                 elevation: MaterialStateProperty.resolveWith((states) => 5.0),
               ),
@@ -165,8 +162,7 @@ class _SignInPageState extends State<SignInPage> {
             secondChild: const LoadingWidget(
               label: AppStrings.signingIn,
             ),
-            layoutBuilder:
-                (topChild, topChildKey, bottomChild, bottomChildKey) {
+            layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
               return Stack(
                 clipBehavior: Clip.none,
                 // Align the non-positioned child to center.

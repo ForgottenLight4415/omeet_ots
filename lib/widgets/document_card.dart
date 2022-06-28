@@ -39,10 +39,7 @@ class DocumentCard extends StatelessWidget {
                     maxWidth: 110.w,
                     minWidth: 110.w,
                   ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(14.r)
-                  ),
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(14.r)),
                   child: Center(
                     child: FaIcon(
                       FontAwesomeIcons.fileAlt,

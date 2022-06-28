@@ -83,11 +83,7 @@ class _AudioRecordPageState extends State<AudioRecordPage> {
               ),
               Text(
                 widget.arguments.claim.claimNumber,
-                style: TextStyle(
-                  fontSize: 35.sp,
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w600
-                ),
+                style: TextStyle(fontSize: 35.sp, color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 50.h),
@@ -154,10 +150,7 @@ class _AudioTimerState extends State<AudioTimer> {
       child: Container(
         height: 300.h,
         width: 300.h,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).primaryColor
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
         child: Center(
           child: _buildTime(),
         ),
@@ -171,10 +164,7 @@ class _AudioTimerState extends State<AudioTimer> {
     return FittedBox(
       child: Text(
         "$minutes:$seconds",
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 80.sp
-        ),
+        style: TextStyle(color: Colors.white, fontSize: 80.sp),
       ),
     );
   }
@@ -183,5 +173,3 @@ class _AudioTimerState extends State<AudioTimer> {
     return n.toString().padLeft(2, '0');
   }
 }
-
-

@@ -9,20 +9,20 @@ class Question {
   bool flag;
   String? _answer;
 
-  Question.fromJson(Map<String, dynamic> decodedJson) :
-      id = int.parse(decodedJson["id"]),
-      question = decodedJson["question"],
-      _resetQuestion = decodedJson["question"],
-      _category = decodedJson["category"],
-      flag = int.parse(decodedJson["status"]) == 1;
+  Question.fromJson(Map<String, dynamic> decodedJson)
+      : id = int.parse(decodedJson["id"]),
+        question = decodedJson["question"],
+        _resetQuestion = decodedJson["question"],
+        _category = decodedJson["category"],
+        flag = int.parse(decodedJson["status"]) == 1;
 
   String toJson() {
-    Map<String, dynamic> _question =  <String, dynamic> {
-      'id' : id,
-      'question' : question,
-      'answer' : _answer ?? "Unanswered",
-      'flag' : flag ? 1 : 0,
-      'category' : _category
+    Map<String, dynamic> _question = <String, dynamic>{
+      'id': id,
+      'question': question,
+      'answer': _answer ?? "Unanswered",
+      'flag': flag ? 1 : 0,
+      'category': _category
     };
     return jsonEncode(_question);
   }

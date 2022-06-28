@@ -122,7 +122,7 @@ class Claim {
         faceMatch = cleanStrings(decodedJson["Face_Match"]);
 
   Map<String, Map<String, dynamic>> toMap() {
-    return <String, Map<String, dynamic>> {
+    return <String, Map<String, dynamic>>{
       'Customer Information': <String, dynamic>{
         'Customer name': insuredName,
         'Customer address': _createAddress(insuredCity, insuredState),
@@ -130,29 +130,29 @@ class Claim {
         'Alternate phone number': insuredAltContactNumber,
         'Email address': email,
       },
-      'Policy Details': <String, dynamic> {
+      'Policy Details': <String, dynamic>{
         'Policy number': policyNumber,
         'Policy start date': policyStartDate,
         'Policy end date': policyEndDate,
         'Previous policy number': prevPolicyNumber,
         'Previous policy expiration date': prevPolicyExpDate,
       },
-      'Vehicle Details' : <String, dynamic> {
-        'Type' : productType,
-        'Make' : make,
-        'Model' : model,
-        'Engine number' : engineNumber,
-        'Chassis number' : chassisNumber,
+      'Vehicle Details': <String, dynamic>{
+        'Type': productType,
+        'Make': make,
+        'Model': model,
+        'Engine number': engineNumber,
+        'Chassis number': chassisNumber,
       },
-      'Claim Details' : <String, dynamic> {
-        'Type' : typeOfClaim,
-        'Current status' : currentStatus,
-        'Date of theft' : dateOfTheft,
-        'Date of loss' : dateOfLoss,
-        'Date of intimation' : dateOfIntimation,
-        'Invoice referral date' : invReferralDate,
-        'Loss location' : _createAddress(lossLocationCity, lossLocationState),
-        'Location code' : locationCode
+      'Claim Details': <String, dynamic>{
+        'Type': typeOfClaim,
+        'Current status': currentStatus,
+        'Date of theft': dateOfTheft,
+        'Date of loss': dateOfLoss,
+        'Date of intimation': dateOfIntimation,
+        'Invoice referral date': invReferralDate,
+        'Loss location': _createAddress(lossLocationCity, lossLocationState),
+        'Location code': locationCode
       }
     };
   }

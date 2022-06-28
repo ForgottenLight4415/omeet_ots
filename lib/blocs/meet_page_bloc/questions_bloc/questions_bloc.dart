@@ -24,15 +24,13 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
   ) async {
     emit(QuestionsLoading());
     try {
-      final List<Question> _questions =
-          await _repository.getQuestions(event.claimNumber);
+      final List<Question> _questions = await _repository.getQuestions(event.claimNumber);
       _repository.setQuestions(_questions);
       emit(QuestionsReady(questions: _questions));
     } on ServerException catch (a) {
       emit(QuestionsLoadingFailed(code: a.code, cause: a.cause));
     } on SocketException {
-      emit(QuestionsLoadingFailed(
-          code: 1000, cause: "Couldn't connect to server."));
+      emit(QuestionsLoadingFailed(code: 1000, cause: "Couldn't connect to server."));
     } catch (_) {
       emit(QuestionsLoadingFailed(code: 2000, cause: "Something went wrong."));
     }
@@ -46,7 +44,7 @@ class QuestionsBloc extends Bloc<QuestionsEvent, QuestionsState> {
       return;
     }
     final _savedQuestions = _repository.questions;
-    final Map<String, dynamic> _rawQuestion = <String, dynamic> {
+    final Map<String, dynamic> _rawQuestion = <String, dynamic>{
       "id": _savedQuestions.length.toString(),
       "question": event.question,
       "category": "OWN_QUESTION",

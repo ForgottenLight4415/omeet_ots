@@ -8,8 +8,7 @@ import './scaling_tile.dart';
 class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String label;
-  const PrimaryButton({Key? key, required this.onPressed, required this.label})
-      : super(key: key);
+  const PrimaryButton({Key? key, required this.onPressed, required this.label}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,7 @@ class VideoMeetToggleButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const VideoMeetToggleButton(
-      {Key? key,
-      required this.toggleParameter,
-      required this.primaryFaIcon,
-      required this.secondaryFaIcon,
-      required this.onPressed})
+      {Key? key, required this.toggleParameter, required this.primaryFaIcon, required this.secondaryFaIcon, required this.onPressed})
       : super(key: key);
 
   @override
@@ -65,9 +60,7 @@ class VideoMeetToggleButton extends StatelessWidget {
           child: Center(
             child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 200),
-              crossFadeState: toggleParameter
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
+              crossFadeState: toggleParameter ? CrossFadeState.showFirst : CrossFadeState.showSecond,
               firstChild: FaIcon(
                 primaryFaIcon,
                 color: Colors.white,

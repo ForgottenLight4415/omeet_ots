@@ -15,8 +15,7 @@ class QuestionsPage extends StatefulWidget {
   State<QuestionsPage> createState() => _QuestionsPageState();
 }
 
-class _QuestionsPageState extends State<QuestionsPage>
-    with AutomaticKeepAliveClientMixin<QuestionsPage> {
+class _QuestionsPageState extends State<QuestionsPage> with AutomaticKeepAliveClientMixin<QuestionsPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -42,8 +41,7 @@ class _QuestionsPageState extends State<QuestionsPage>
   Widget build(BuildContext context) {
     super.build(context);
     return BlocProvider<QuestionsBloc>(
-      create: (context) => QuestionsBloc()
-        ..add(GetQuestionsEvent(claimNumber: widget.claimNumber)),
+      create: (context) => QuestionsBloc()..add(GetQuestionsEvent(claimNumber: widget.claimNumber)),
       child: BlocConsumer<QuestionsBloc, QuestionsState>(
         listener: (context, state) {
           if (state is QuestionsReady) {
@@ -98,17 +96,12 @@ class _QuestionsPageState extends State<QuestionsPage>
                         padding: const EdgeInsets.all(8.0),
                         child: BlocProvider<SubmitQuestionCubit>(
                           create: (context) => SubmitQuestionCubit(),
-                          child: BlocConsumer<SubmitQuestionCubit,
-                              SubmitQuestionState>(
+                          child: BlocConsumer<SubmitQuestionCubit, SubmitQuestionState>(
                             listener: (context, submitState) {
                               if (submitState is SubmitQuestionReady) {
-                                showInfoSnackBar(
-                                    context, "Answers submitted successfully.",
-                                    color: Colors.green);
+                                showInfoSnackBar(context, "Answers submitted successfully.", color: Colors.green);
                               } else if (submitState is SubmitQuestionFailed) {
-                                showInfoSnackBar(context,
-                                    "Failed to submit answers. (${submitState.cause})",
-                                    color: Colors.red);
+                                showInfoSnackBar(context, "Failed to submit answers. (${submitState.cause})", color: Colors.red);
                               }
                             },
                             builder: (context, submitState) {
@@ -116,9 +109,7 @@ class _QuestionsPageState extends State<QuestionsPage>
                                 onPressed: submitState is SubmitQuestionLoading
                                     ? null
                                     : () {
-                                        BlocProvider.of<SubmitQuestionCubit>(
-                                                context)
-                                            .submitQuestion(
+                                        BlocProvider.of<SubmitQuestionCubit>(context).submitQuestion(
                                           widget.claimNumber,
                                           state.questions,
                                         );
@@ -130,12 +121,8 @@ class _QuestionsPageState extends State<QuestionsPage>
                                       vertical: 20.h,
                                     ),
                                   ),
-                                  backgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) => submitState
-                                                  is SubmitQuestionLoading
-                                              ? Colors.grey
-                                              : Theme.of(context).primaryColor),
+                                  backgroundColor: MaterialStateProperty.resolveWith(
+                                      (states) => submitState is SubmitQuestionLoading ? Colors.grey : Theme.of(context).primaryColor),
                                 ),
                               );
                             },
@@ -169,11 +156,7 @@ class _QuestionsPageState extends State<QuestionsPage>
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20.0),
-                  Text("Fetching details")
-                ],
+                children: const <Widget>[CircularProgressIndicator(), SizedBox(height: 20.0), Text("Fetching details")],
               ),
             );
           }

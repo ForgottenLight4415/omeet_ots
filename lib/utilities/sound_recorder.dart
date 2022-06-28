@@ -36,10 +36,7 @@ class SoundRecorder {
     Directory? directory = await getExternalStorageDirectory();
     Directory? _saveDirectory = await Directory(directory!.path + "/Audio").create();
     String _fileName = "/${claim.claimNumber}_$_currentTime.aac";
-    await _audioRecorder!.startRecorder(
-        toFile: _saveDirectory.path + _fileName,
-        codec: Codec.aacADTS
-    );
+    await _audioRecorder!.startRecorder(toFile: _saveDirectory.path + _fileName, codec: Codec.aacADTS);
   }
 
   Future<void> _stop(BuildContext context, double latitude, double longitude) async {
@@ -48,10 +45,10 @@ class SoundRecorder {
     File _audioFile = File(_path!);
     final DataUploadRepository _repository = DataUploadRepository();
     bool _result = await _repository.uploadData(
-        claimNumber: claim.claimNumber,
-        latitude: latitude,
-        longitude: longitude,
-        file: _audioFile,
+      claimNumber: claim.claimNumber,
+      latitude: latitude,
+      longitude: longitude,
+      file: _audioFile,
     );
     if (_result) {
       ScaffoldMessenger.of(context).showSnackBar(

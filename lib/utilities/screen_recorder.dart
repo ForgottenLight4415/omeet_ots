@@ -17,12 +17,10 @@ class ScreenRecorder {
     _edScreenRecorder = EdScreenRecorder();
   }
 
-  Future<Map<String, dynamic>> startRecord(
-      {required String claimNumber}) async {
+  Future<Map<String, dynamic>> startRecord({required String claimNumber}) async {
     log("Starting screen record");
     Directory? directory = await getExternalStorageDirectory();
-    Directory? _saveDirectory =
-        await Directory("${directory!.path}/ScreenRecordings").create();
+    Directory? _saveDirectory = await Directory("${directory!.path}/ScreenRecordings").create();
     var response = await _edScreenRecorder!.startRecordScreen(
       fileName: "${claimNumber}_${DateTime.now().microsecondsSinceEpoch}",
       dirPathToSave: _saveDirectory.path,
@@ -33,8 +31,7 @@ class ScreenRecorder {
     return response;
   }
 
-  Future<Map<String, dynamic>> stopRecord(
-      {required Claim claim, required BuildContext context}) async {
+  Future<Map<String, dynamic>> stopRecord({required Claim claim, required BuildContext context}) async {
     var response = await _edScreenRecorder?.stopRecord();
     File _videoFile = response!['file'];
     final DataUploadRepository _repository = DataUploadRepository();

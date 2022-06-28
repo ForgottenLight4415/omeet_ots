@@ -12,8 +12,7 @@ import 'camera_utility.dart';
 import 'show_snackbars.dart';
 import '../views/recorder_pages/audio_record.dart';
 
-Future<bool> startScreenRecord(BuildContext context,
-    ScreenRecorder screenRecorder, String claimNumber) async {
+Future<bool> startScreenRecord(BuildContext context, ScreenRecorder screenRecorder, String claimNumber) async {
   // Check permissions
   bool _microphoneStatus = await microphonePermission();
   bool _storageStatus = await storagePermission();
@@ -36,8 +35,7 @@ Future<bool> startScreenRecord(BuildContext context,
   }
 }
 
-Future<bool> stopScreenRecord(
-    BuildContext context, ScreenRecorder screenRecorder, Claim claim) async {
+Future<bool> stopScreenRecord(BuildContext context, ScreenRecorder screenRecorder, Claim claim) async {
   await screenRecorder.stopRecord(claim: claim, context: context);
   return false;
 }
@@ -68,13 +66,10 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
   bool microphoneStatus = await microphonePermission();
   bool storageStatus = await storagePermission();
   if (microphoneStatus && storageStatus && locationData != null) {
-    Navigator.pushNamed(context, '/record/audio',
-        arguments: AudioRecordArguments(claim, locationData));
+    Navigator.pushNamed(context, '/record/audio', arguments: AudioRecordArguments(claim, locationData));
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   } else {
-    showInfoSnackBar(context,
-        "Microphone, storage and location permission is required to access this feature.",
-        color: Colors.red);
+    showInfoSnackBar(context, "Microphone, storage and location permission is required to access this feature.", color: Colors.red);
   }
 }
 
@@ -84,10 +79,7 @@ Future<void> recordVideo(BuildContext context, Claim claim) async {
   bool cameraStatus = await cameraPermission();
   bool microphoneStatus = await microphonePermission();
   bool storageStatus = await storagePermission();
-  if (cameraStatus &&
-      microphoneStatus &&
-      storageStatus &&
-      locationData != null) {
+  if (cameraStatus && microphoneStatus && storageStatus && locationData != null) {
     WidgetsFlutterBinding.ensureInitialized();
     List<CameraDescription>? _cameras;
     try {
@@ -99,9 +91,7 @@ Future<void> recordVideo(BuildContext context, Claim claim) async {
       );
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on CameraException catch (e) {
-      showInfoSnackBar(
-          context, "Failed to determine available cameras. (${e.description})",
-          color: Colors.red);
+      showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
     }
   } else {
     showInfoSnackBar(
@@ -118,10 +108,7 @@ Future<void> captureImage(BuildContext context, Claim claim) async {
   bool _cameraStatus = await cameraPermission();
   bool _microphoneStatus = await microphonePermission();
   bool _storageStatus = await storagePermission();
-  if (_cameraStatus &&
-      _microphoneStatus &&
-      _storageStatus &&
-      _locationData != null) {
+  if (_cameraStatus && _microphoneStatus && _storageStatus && _locationData != null) {
     WidgetsFlutterBinding.ensureInitialized();
     List<CameraDescription>? _cameras;
     try {
@@ -133,9 +120,7 @@ Future<void> captureImage(BuildContext context, Claim claim) async {
       );
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on CameraException catch (e) {
-      showInfoSnackBar(
-          context, "Failed to determine available cameras. (${e.description})",
-          color: Colors.red);
+      showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
     }
   } else {
     showInfoSnackBar(

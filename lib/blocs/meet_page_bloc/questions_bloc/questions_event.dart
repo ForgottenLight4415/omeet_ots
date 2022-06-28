@@ -14,5 +14,3 @@ class AddQuestionEvent extends QuestionsEvent {
 
   AddQuestionEvent({required this.question});
 }
-
-

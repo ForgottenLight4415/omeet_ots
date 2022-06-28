@@ -21,8 +21,7 @@ class CaptureImagePage extends StatefulWidget {
   State<CaptureImagePage> createState() => _CaptureImagePageState();
 }
 
-class _CaptureImagePageState extends State<CaptureImagePage>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+class _CaptureImagePageState extends State<CaptureImagePage> with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
   XFile? imageFile;
   double _minAvailableExposureOffset = 0.0;
@@ -115,10 +114,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
               decoration: BoxDecoration(
                 color: Colors.black,
                 border: Border.all(
-                  color:
-                  controller != null && controller!.value.isRecordingVideo
-                      ? Colors.redAccent
-                      : Colors.grey,
+                  color: controller != null && controller!.value.isRecordingVideo ? Colors.redAccent : Colors.grey,
                   width: 3.0,
                 ),
               ),
@@ -164,16 +160,14 @@ class _CaptureImagePageState extends State<CaptureImagePage>
         onPointerUp: (_) => _pointers--,
         child: CameraPreview(
           controller!,
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onScaleStart: _handleScaleStart,
-                  onScaleUpdate: _handleScaleUpdate,
-                  onTapDown: (TapDownDetails details) =>
-                      onViewFinderTap(details, constraints),
-                );
-              }),
+          child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onScaleStart: _handleScaleStart,
+              onScaleUpdate: _handleScaleUpdate,
+              onTapDown: (TapDownDetails details) => onViewFinderTap(details, constraints),
+            );
+          }),
         ),
       );
     }
@@ -189,8 +183,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
       return;
     }
 
-    _currentScale = (_baseScale * details.scale)
-        .clamp(_minAvailableZoom, _maxAvailableZoom);
+    _currentScale = (_baseScale * details.scale).clamp(_minAvailableZoom, _maxAvailableZoom);
 
     await controller!.setZoomLevel(_currentScale);
   }
@@ -211,15 +204,12 @@ class _CaptureImagePageState extends State<CaptureImagePage>
             IconButton(
               icon: const Icon(Icons.exposure),
               color: Colors.red,
-              onPressed: controller != null
-                  ? onExposureModeButtonPressed
-                  : null,
+              onPressed: controller != null ? onExposureModeButtonPressed : null,
             ),
             IconButton(
               icon: const Icon(Icons.filter_center_focus),
               color: Colors.red,
-              onPressed:
-              controller != null ? onFocusModeButtonPressed : null,
+              onPressed: controller != null ? onFocusModeButtonPressed : null,
             ),
           ],
         ),
@@ -240,39 +230,23 @@ class _CaptureImagePageState extends State<CaptureImagePage>
           children: <Widget>[
             IconButton(
               icon: const Icon(Icons.flash_off),
-              color: controller?.value.flashMode == FlashMode.off
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.off)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.off ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.off) : null,
             ),
             IconButton(
               icon: const Icon(Icons.flash_auto),
-              color: controller?.value.flashMode == FlashMode.auto
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.auto)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.auto ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.auto) : null,
             ),
             IconButton(
               icon: const Icon(Icons.flash_on),
-              color: controller?.value.flashMode == FlashMode.always
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.always)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.always ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.always) : null,
             ),
             IconButton(
               icon: const Icon(Icons.highlight),
-              color: controller?.value.flashMode == FlashMode.torch
-                  ? Colors.orange
-                  : Colors.red,
-              onPressed: controller != null
-                  ? () => onSetFlashModeButtonPressed(FlashMode.torch)
-                  : null,
+              color: controller?.value.flashMode == FlashMode.torch ? Colors.orange : Colors.red,
+              onPressed: controller != null ? () => onSetFlashModeButtonPressed(FlashMode.torch) : null,
             ),
           ],
         ),
@@ -282,14 +256,10 @@ class _CaptureImagePageState extends State<CaptureImagePage>
 
   Widget _exposureModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.auto
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.exposureMode == ExposureMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.exposureMode == ExposureMode.locked
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.exposureMode == ExposureMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(
@@ -308,10 +278,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                 children: <Widget>[
                   TextButton(
                     style: styleAuto,
-                    onPressed: controller != null
-                        ? () =>
-                        onSetExposureModeButtonPressed(ExposureMode.auto)
-                        : null,
+                    onPressed: controller != null ? () => onSetExposureModeButtonPressed(ExposureMode.auto) : null,
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setExposurePoint(null);
@@ -322,17 +289,12 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () =>
-                        onSetExposureModeButtonPressed(ExposureMode.locked)
-                        : null,
+                    onPressed: controller != null ? () => onSetExposureModeButtonPressed(ExposureMode.locked) : null,
                     child: const Text('LOCKED'),
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () => controller!.setExposureOffset(0.0)
-                        : null,
+                    onPressed: controller != null ? () => controller!.setExposureOffset(0.0) : null,
                     child: const Text('RESET OFFSET'),
                   ),
                 ],
@@ -350,10 +312,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                     min: _minAvailableExposureOffset,
                     max: _maxAvailableExposureOffset,
                     label: _currentExposureOffset.toString(),
-                    onChanged: _minAvailableExposureOffset ==
-                        _maxAvailableExposureOffset
-                        ? null
-                        : setExposureOffset,
+                    onChanged: _minAvailableExposureOffset == _maxAvailableExposureOffset ? null : setExposureOffset,
                   ),
                   Text(_maxAvailableExposureOffset.toString()),
                 ],
@@ -367,14 +326,10 @@ class _CaptureImagePageState extends State<CaptureImagePage>
 
   Widget _focusModeControlRowWidget() {
     final ButtonStyle styleAuto = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.auto
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.focusMode == FocusMode.auto ? Colors.orange : Colors.red,
     );
     final ButtonStyle styleLocked = TextButton.styleFrom(
-      primary: controller?.value.focusMode == FocusMode.locked
-          ? Colors.orange
-          : Colors.red,
+      primary: controller?.value.focusMode == FocusMode.locked ? Colors.orange : Colors.red,
     );
 
     return SizeTransition(
@@ -393,9 +348,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                 children: <Widget>[
                   TextButton(
                     style: styleAuto,
-                    onPressed: controller != null
-                        ? () => onSetFocusModeButtonPressed(FocusMode.auto)
-                        : null,
+                    onPressed: controller != null ? () => onSetFocusModeButtonPressed(FocusMode.auto) : null,
                     onLongPress: () {
                       if (controller != null) {
                         controller!.setFocusPoint(null);
@@ -406,9 +359,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed: controller != null
-                        ? () => onSetFocusModeButtonPressed(FocusMode.locked)
-                        : null,
+                    onPressed: controller != null ? () => onSetFocusModeButtonPressed(FocusMode.locked) : null,
                     child: const Text('LOCKED'),
                   ),
                 ],
@@ -427,9 +378,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
     return IconButton(
       icon: const Icon(Icons.camera_alt),
       color: Colors.red,
-      onPressed: cameraController != null &&
-          cameraController.value.isInitialized &&
-          !cameraController.value.isRecordingVideo
+      onPressed: cameraController != null && cameraController.value.isInitialized && !cameraController.value.isRecordingVideo
           ? onTakePictureButtonPressed
           : null,
     );
@@ -460,10 +409,7 @@ class _CaptureImagePageState extends State<CaptureImagePage>
               title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
               groupValue: controller?.description,
               value: cameraDescription,
-              onChanged:
-              controller != null && controller!.value.isRecordingVideo
-                  ? null
-                  : onChanged,
+              onChanged: controller != null && controller!.value.isRecordingVideo ? null : onChanged,
             ),
           ),
         );
@@ -517,25 +463,17 @@ class _CaptureImagePageState extends State<CaptureImagePage>
         setState(() {});
       }
       if (cameraController.value.hasError) {
-        showSnackBar(context,
-            'Camera error ${cameraController.value.errorDescription}');
+        showSnackBar(context, 'Camera error ${cameraController.value.errorDescription}');
       }
     });
 
     try {
       await cameraController.initialize();
       await Future.wait(<Future<Object?>>[
-        cameraController.getMinExposureOffset().then(
-                (double value) => _minAvailableExposureOffset = value),
-        cameraController
-            .getMaxExposureOffset()
-            .then((double value) => _maxAvailableExposureOffset = value),
-        cameraController
-            .getMaxZoomLevel()
-            .then((double value) => _maxAvailableZoom = value),
-        cameraController
-            .getMinZoomLevel()
-            .then((double value) => _minAvailableZoom = value),
+        cameraController.getMinExposureOffset().then((double value) => _minAvailableExposureOffset = value),
+        cameraController.getMaxExposureOffset().then((double value) => _maxAvailableExposureOffset = value),
+        cameraController.getMaxZoomLevel().then((double value) => _maxAvailableZoom = value),
+        cameraController.getMinZoomLevel().then((double value) => _minAvailableZoom = value),
       ]);
     } on CameraException catch (e) {
       switch (e.code) {
@@ -543,26 +481,26 @@ class _CaptureImagePageState extends State<CaptureImagePage>
           showSnackBar(context, 'You have denied camera access.');
           break;
         case 'CameraAccessDeniedWithoutPrompt':
-        // iOS only
+          // iOS only
           showSnackBar(context, 'Please go to Settings app to enable camera access.');
           break;
         case 'CameraAccessRestricted':
-        // iOS only
+          // iOS only
           showSnackBar(context, 'Camera access is restricted.');
           break;
         case 'AudioAccessDenied':
           showSnackBar(context, 'You have denied audio access.');
           break;
         case 'AudioAccessDeniedWithoutPrompt':
-        // iOS only
+          // iOS only
           showSnackBar(context, 'Please go to Settings app to enable audio access.');
           break;
         case 'AudioAccessRestricted':
-        // iOS only
+          // iOS only
           showSnackBar(context, 'Audio access is restricted.');
           break;
         case 'cameraPermission':
-        // Android & web only
+          // Android & web only
           showSnackBar(context, 'Unknown permission error.');
           break;
         default:

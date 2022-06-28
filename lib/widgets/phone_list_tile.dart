@@ -6,9 +6,7 @@ import '../utilities/app_constants.dart';
 class PhoneListTile extends StatelessWidget {
   final String phoneNumber;
   final bool primary;
-  const PhoneListTile(
-      {Key? key, required this.phoneNumber, this.primary = true})
-      : super(key: key);
+  const PhoneListTile({Key? key, required this.phoneNumber, this.primary = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

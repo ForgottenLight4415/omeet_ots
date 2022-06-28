@@ -60,8 +60,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () async {
                     await AuthRepository().signOut();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                   },
                   icon: const Icon(Icons.logout),
                 ),

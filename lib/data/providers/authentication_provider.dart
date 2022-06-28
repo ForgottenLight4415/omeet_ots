@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationProvider extends AppServerProvider {
   Future<bool> signIn(String email, String password) async {
-    final Map<String, String> _data = <String, String> {
+    final Map<String, String> _data = <String, String>{
       "email": email.trim(),
       "password": password,
     };

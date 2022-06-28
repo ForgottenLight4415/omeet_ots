@@ -93,8 +93,7 @@ class LocationService {
       );
       _permissionGranted = await _location.hasPermission();
     }
-    if (_permissionGranted == PermissionStatus.granted
-        || _permissionGranted == PermissionStatus.grantedLimited) {
+    if (_permissionGranted == PermissionStatus.granted || _permissionGranted == PermissionStatus.grantedLimited) {
       return true;
     }
     return false;

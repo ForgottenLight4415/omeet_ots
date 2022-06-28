@@ -4,7 +4,7 @@ import 'package:rc_clone/utilities/app_constants.dart';
 
 class MeetQuestionsProvider extends AppServerProvider {
   Future<List<Question>> getQuestions(String claimNumber) async {
-    final Map<String, String> _data = <String, String> {
+    final Map<String, String> _data = <String, String>{
       "Claim_No": claimNumber,
     };
     final DecodedResponse _response = await postRequest(
@@ -33,10 +33,7 @@ class MeetQuestionsProvider extends AppServerProvider {
     for (var question in questions) {
       _questions.add(question.toJson());
     }
-    final Map<String, dynamic> _data = <String, dynamic> {
-      "claim": claimNumber,
-      "qa" : _questions
-    };
+    final Map<String, dynamic> _data = <String, dynamic>{"claim": claimNumber, "qa": _questions};
     final DecodedResponse _response = await postRequest(
       path: AppStrings.submitAnswersUrl,
       data: _data,

@@ -33,10 +33,7 @@ class CustomTextFormField extends StatelessWidget {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: borderColor, width: 2)
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(14.r), border: Border.all(color: borderColor, width: 2)),
         child: TextFormField(
           controller: textEditingController,
           focusNode: focusNode,
@@ -67,14 +64,14 @@ class SearchField extends StatelessWidget {
 
   const SearchField(
       {Key? key,
-        this.textEditingController,
-        this.focusNode,
-        this.keyboardType,
-        this.textInputAction,
-        this.validator,
-        required this.hintText,
-        this.borderColor = Colors.transparent,
-        this.obscureText = false})
+      this.textEditingController,
+      this.focusNode,
+      this.keyboardType,
+      this.textInputAction,
+      this.validator,
+      required this.hintText,
+      this.borderColor = Colors.transparent,
+      this.obscureText = false})
       : super(key: key);
 
   @override
@@ -82,8 +79,8 @@ class SearchField extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          color: const Color(0xFFF0F1F5),
+        borderRadius: BorderRadius.circular(14.r),
+        color: const Color(0xFFF0F1F5),
       ),
       child: TextFormField(
         controller: textEditingController,
