@@ -28,12 +28,7 @@ class AppTheme {
       headline2: TextStyle(fontSize: 30.sp),
       headline3: TextStyle(fontSize: 28.sp),
       headline4: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.w700),
-      headline5: TextStyle(
-        fontSize: 24.sp,
-        fontFamily: 'Nunito',
-        fontWeight: FontWeight.w600,
-        color: Colors.black54,
-      ),
+      headline5: TextStyle(fontSize: 24.sp),
       headline6: TextStyle(fontSize: 22.sp),
       bodyText1: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w400),
       bodyText2: TextStyle(fontSize: 18.sp),

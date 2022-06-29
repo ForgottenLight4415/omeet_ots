@@ -30,9 +30,7 @@ class _ClaimCardState extends State<ClaimCard> {
   @override
   Widget build(BuildContext context) {
     return ScalingTile(
-      onPressed: () {
-        _openClaimMenu();
-      },
+      onPressed: _openClaimMenu,
       child: Card(
         child: Container(
           constraints: BoxConstraints(minHeight: 250.h),
@@ -59,10 +57,7 @@ class _ClaimCardState extends State<ClaimCard> {
                   ),
                   CardDetailText(
                     title: AppStrings.customerAddress,
-                    content: _createAddress(
-                      widget.claim.insuredCity,
-                      widget.claim.insuredState,
-                    ),
+                    content: widget.claim.customerAddress,
                   ),
                   CardDetailText(
                     title: AppStrings.phoneNumber,
@@ -83,7 +78,7 @@ class _ClaimCardState extends State<ClaimCard> {
                         child: BlocConsumer<CallCubit, CallState>(
                           listener: _callListener,
                           builder: (context, state) => ElevatedButton(
-                            onPressed: _call,
+                            onPressed: () => _call(context),
                             child: const Icon(Icons.phone),
                           ),
                         ),
@@ -139,14 +134,12 @@ class _ClaimCardState extends State<ClaimCard> {
     }
   }
 
-  Future<void> _call() async {
+  Future<void> _call(BuildContext context) async {
     String? _selectedPhone;
     if (widget.claim.insuredAltContactNumber != AppStrings.unavailable) {
       _selectedPhone = await showModalBottomSheet(
         context: context,
-        constraints: BoxConstraints(
-          maxHeight: 300.h,
-        ),
+        constraints: BoxConstraints(maxHeight: 300.h),
         builder: (context) => Column(
           children: <Widget>[
             Padding(
@@ -321,17 +314,5 @@ class _ClaimCardState extends State<ClaimCard> {
       }
     }
     return "Record screen";
-  }
-
-  String _createAddress(String city, String state) {
-    if (city != AppStrings.unavailable && state != AppStrings.unavailable) {
-      return "$city, $state";
-    } else if (city != AppStrings.unavailable) {
-      return city;
-    } else if (state != AppStrings.unavailable) {
-      return state;
-    } else {
-      return AppStrings.unavailable;
-    }
   }
 }

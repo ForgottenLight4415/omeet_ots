@@ -27,11 +27,7 @@ class CustomErrorWidget extends StatelessWidget {
             height: 400.h,
             width: 500.w,
           ),
-          Text(
-            errorText,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline5,
-          ),
+          _ErrorText(errorText: errorText),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: action,
@@ -70,6 +66,26 @@ class InformationWidget extends StatelessWidget {
                 ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ErrorText extends StatelessWidget {
+  final String errorText;
+
+  const _ErrorText({Key? key, required this.errorText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      errorText,
+      textAlign: TextAlign.center,
+      maxLines: 3,
+      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+        fontFamily: 'Nunito',
+        fontWeight: FontWeight.w600,
+        color: Colors.black54,
       ),
     );
   }

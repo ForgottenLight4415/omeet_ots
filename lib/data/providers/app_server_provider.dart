@@ -19,7 +19,7 @@ class AppServerProvider {
 
   Future<DecodedResponse> postRequest({required String path, required Map<String, dynamic> data}) async {
     final Response _response = await post(
-      Uri.https(AppStrings.baseUrl, path),
+      Uri.https(AppStrings.baseUrl, AppStrings.subDirectory + path),
       headers: <String, String>{"Content-Type": "application/json; charset=UTF-8", "Accept": "application/json"},
       body: jsonEncode(data),
     );
@@ -38,9 +38,10 @@ class AppServerProvider {
         AppStrings.voiceCallUrl,
         data,
       ),
-      headers: <String, String>{"Accept": "application/json"},
+      headers: <String, String>{
+        "Accept": "application/json",
+      },
     );
-
     return _response.statusCode == successCode;
   }
 }

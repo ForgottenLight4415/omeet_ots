@@ -183,4 +183,12 @@ class Claim {
       return AppStrings.unavailable;
     }
   }
+
+  String get customerAddress {
+    return _createAddress(insuredCity, insuredState);
+  }
+
+  String get lossAddress {
+    return _createAddress(lossLocationCity, lossLocationState);
+  }
 }
