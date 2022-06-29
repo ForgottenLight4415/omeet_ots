@@ -13,7 +13,7 @@ class PhoneListTile extends StatelessWidget {
     return ListTile(
       leading: Padding(
         padding: EdgeInsets.only(left: 12.w, top: 8.h),
-        child: Icon(Icons.phone, size: 30.w, color: Colors.deepOrange),
+        child: Icon(Icons.phone, size: 30.w, color: Theme.of(context).primaryColor),
       ),
       title: Text(primary ? AppStrings.primary : AppStrings.secondary),
       subtitle: Text(phoneNumber),
