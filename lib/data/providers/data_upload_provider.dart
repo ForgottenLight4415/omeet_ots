@@ -10,7 +10,7 @@ class DataUploadProvider extends AppServerProvider {
       {required String claimNumber, required double latitude, required double longitude, required File file}) async {
     final MultipartRequest _request = MultipartRequest(
       "POST",
-      Uri.https(AppStrings.baseUrl, AppStrings.uploadVideoUrl),
+      Uri.https(AppStrings.baseUrl, AppStrings.subDirectory + AppStrings.uploadVideoUrl),
     );
     _request.headers.addAll({
       "Content-Type": "multipart/form-data",
