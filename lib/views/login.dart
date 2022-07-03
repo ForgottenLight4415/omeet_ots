@@ -18,10 +18,6 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
   CrossFadeState _crossFadeState = CrossFadeState.showFirst;
-  final FocusNode _passFocusNode = FocusNode();
-  final FocusNode _emailFocusNode = FocusNode();
-  Color _passBorderColor = Colors.transparent;
-  Color _emailBorderColor = Colors.transparent;
   AuthCubit? _authCubit;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -31,16 +27,6 @@ class _SignInPageState extends State<SignInPage> {
     _authCubit = AuthCubit();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _passFocusNode.addListener(() {
-      setState(() {
-        _passBorderColor = _passFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
-      });
-    });
-    _emailFocusNode.addListener(() {
-      setState(() {
-        _emailBorderColor = _emailFocusNode.hasFocus ? Colors.deepOrange : Colors.transparent;
-      });
-    });
   }
 
   @override
@@ -48,8 +34,6 @@ class _SignInPageState extends State<SignInPage> {
     _authCubit!.close();
     _emailController!.dispose();
     _passwordController!.dispose();
-    _emailFocusNode.dispose();
-    _passFocusNode.dispose();
     super.dispose();
   }
 
@@ -121,20 +105,16 @@ class _SignInPageState extends State<SignInPage> {
                               textEditingController: _emailController,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
-                              focusNode: _emailFocusNode,
                               label: "Email address",
                               hintText: "Enter registered email address",
-                              borderColor: _emailBorderColor,
                               validator: _isEmailValid,
                             ),
                             SizedBox(height: 15.h),
                             CustomTextFormField(
                                 textEditingController: _passwordController,
                                 textInputAction: TextInputAction.go,
-                                focusNode: _passFocusNode,
                                 label: "Password",
                                 hintText: "Enter your password",
-                                borderColor: _passBorderColor,
                                 validator: _isPasswordValid,
                                 obscureText: true,
                                 onFieldSubmitted: (value) {

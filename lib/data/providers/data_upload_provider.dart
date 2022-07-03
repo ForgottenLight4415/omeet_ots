@@ -1,16 +1,34 @@
 import 'dart:io';
 
+import 'package:rc_clone/data/databases/database.dart';
+
 import 'package:http/http.dart';
 
 import '../providers/app_server_provider.dart';
 import '../../utilities/app_constants.dart';
 
 class DataUploadProvider extends AppServerProvider {
-  Future<bool> uploadVideoCapture(
-      {required String claimNumber, required double latitude, required double longitude, required File file}) async {
+  Future<bool> uploadFiles({
+    required String claimNumber,
+    required double latitude,
+    required double longitude,
+    required File file,
+  }) async {
+    final int uploadId = await OMeetDatabase.instance.create(
+      UploadObject(
+        claimNo: claimNumber,
+        latitude: latitude,
+        longitude: longitude,
+        file: file.path,
+        time: DateTime.now(),
+      ),
+    );
     final MultipartRequest _request = MultipartRequest(
       "POST",
-      Uri.https(AppStrings.baseUrl, AppStrings.subDirectory + AppStrings.uploadVideoUrl),
+      Uri.https(
+        AppStrings.baseUrl,
+        AppStrings.subDirectory + AppStrings.uploadVideoUrl,
+      ),
     );
     _request.headers.addAll({
       "Content-Type": "multipart/form-data",
@@ -24,6 +42,9 @@ class DataUploadProvider extends AppServerProvider {
     Response _multipartResponse = await Response.fromStream(
       await _request.send(),
     );
+    if (_multipartResponse.statusCode == successCode) {
+      await OMeetDatabase.instance.delete(uploadId);
+    }
     return _multipartResponse.statusCode == successCode;
   }
 }

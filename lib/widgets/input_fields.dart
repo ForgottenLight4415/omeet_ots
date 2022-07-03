@@ -1,31 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
-  final FocusNode? focusNode;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final String? Function(String?)? validator;
   final String label;
   final String hintText;
-  final Color borderColor;
   final bool obscureText;
   final void Function(String)? onFieldSubmitted;
 
   const CustomTextFormField(
       {Key? key,
       this.textEditingController,
-      this.focusNode,
       this.keyboardType,
       this.textInputAction,
       this.validator,
       required this.label,
       required this.hintText,
-      this.borderColor = Colors.transparent,
       this.obscureText = false,
       this.onFieldSubmitted})
       : super(key: key);
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  FocusNode? _focusNode;
+  Color _borderColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _borderColor = Colors.transparent;
+    _focusNode = FocusNode();
+    _focusNode!.addListener(() {
+      setState(() {
+        _borderColor =
+            _focusNode!.hasFocus ? Colors.deepOrange : Colors.transparent;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode!.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +56,25 @@ class CustomTextFormField extends StatelessWidget {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(14.r), border: Border.all(color: borderColor, width: 2)),
-        child: TextFormField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          keyboardType: keyboardType,
-          decoration: InputDecoration(
-            label: Text(label),
-            hintText: hintText,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(
+            color: _borderColor,
+            width: 2,
           ),
-          textInputAction: textInputAction,
-          validator: validator,
-          obscureText: obscureText,
-          onFieldSubmitted: onFieldSubmitted,
+        ),
+        child: TextFormField(
+          controller: widget.textEditingController,
+          focusNode: _focusNode,
+          keyboardType: widget.keyboardType,
+          decoration: InputDecoration(
+            label: Text(widget.label),
+            hintText: widget.hintText,
+          ),
+          textInputAction: widget.textInputAction,
+          validator: widget.validator,
+          obscureText: widget.obscureText,
+          onFieldSubmitted: widget.onFieldSubmitted,
         ),
       ),
     );

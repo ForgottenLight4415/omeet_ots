@@ -17,21 +17,12 @@ class ConclusionPage extends StatefulWidget {
 class _ConclusionPageState extends State<ConclusionPage> {
   String? _selectedConclusion;
   TextEditingController? _controller;
-  FocusNode? _focusNode;
-  Color? _borderColor;
 
   @override
   void initState() {
     super.initState();
     _selectedConclusion = "Select";
     _controller = TextEditingController();
-    _borderColor = Colors.transparent;
-    _focusNode = FocusNode();
-    _focusNode!.addListener(() {
-      setState(() {
-        _borderColor = _focusNode!.hasFocus ? Colors.deepOrange : Colors.transparent;
-      });
-    });
   }
 
   @override
@@ -88,10 +79,8 @@ class _ConclusionPageState extends State<ConclusionPage> {
           CustomTextFormField(
             textEditingController: _controller,
             textInputAction: TextInputAction.done,
-            focusNode: _focusNode,
             label: "Conclusion reason",
             hintText: "Enter a reason",
-            borderColor: _borderColor!,
           ),
           const Spacer(),
           Row(

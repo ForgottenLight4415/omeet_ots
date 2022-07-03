@@ -58,6 +58,12 @@ class _HomePageState extends State<HomePage> {
               foregroundColor: Colors.black87,
               actions: [
                 IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/uploads');
+                  },
+                  icon: const Icon(Icons.upload),
+                ),
+                IconButton(
                   onPressed: () async {
                     await AuthRepository().signOut();
                     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);

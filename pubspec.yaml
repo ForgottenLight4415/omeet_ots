@@ -26,6 +26,7 @@ dependencies:
   html: ^0.15.0
   camera: ^0.9.8
   location: ^4.4.0
+  sqflite: ^2.0.2+1
   flutter_svg: ^1.0.3
   flutter_bloc: ^8.0.1
   maps_launcher: ^2.0.1

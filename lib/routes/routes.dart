@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rc_clone/views/documents_page.dart';
 import 'package:rc_clone/views/pdf_viewer.dart';
+import 'package:rc_clone/views/uploads_page.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
@@ -44,6 +45,9 @@ class RouteGenerator {
         return _platformDependentRouting(
           CaptureImagePage(arguments: _captureImageArgs),
         );
+
+      case '/uploads':
+        return _platformDependentRouting(const UploadsPage());
 
       case '/documents':
         final String _claimNumber = args as String;
