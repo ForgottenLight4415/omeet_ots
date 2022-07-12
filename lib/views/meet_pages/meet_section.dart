@@ -247,6 +247,10 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
 
   Future<void> _closeMeeting() async {
     await JitsiMeet.closeMeeting();
+    setState(() {
+      _status = VideoMeetStatus.terminated;
+    });
+    await _screenRecorder!.stopRecord(claimNumber: widget.claim.claimNumber, context: context);
   }
 
   @override
