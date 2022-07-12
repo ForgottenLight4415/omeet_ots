@@ -15,6 +15,7 @@ class AppStrings {
   static const String messageMeetUrl = "https://omeet.in/BAGIC_Extended_Warranty/OMEET/index.php?id=";
 
   static const String loginUrl = "api/loginm.php";
+  static const String verifyOtp = "api/verify_otp.php";
 
   // CLAIMS
   static const String getClaimsUrl = "api/allclaims.php";

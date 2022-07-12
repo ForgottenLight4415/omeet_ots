@@ -37,7 +37,7 @@ class _NewClaimPageState extends State<NewClaimPage> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   showInfoSnackBar(
-                      context, "Claim created. Pull down to refresh",
+                      context, "Claim created.",
                       color: Colors.green);
                 } else if (state is CreationFailed) {
                   Navigator.pop(context);

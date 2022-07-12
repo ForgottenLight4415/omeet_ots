@@ -229,7 +229,7 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
         FeatureFlagEnum.RECORDING_ENABLED: false,
       };
-      var options = JitsiMeetingOptions(room: "${widget.claim.claimNumber}_${DateTime.now().microsecondsSinceEpoch}")
+      var options = JitsiMeetingOptions(room: widget.claim.claimNumber)
         ..serverURL = "https://hi.omeet.in/${widget.claim.claimNumber.replaceAll('-', '')}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "OMeet Agent"

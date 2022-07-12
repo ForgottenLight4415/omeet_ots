@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -20,6 +21,7 @@ class NewClaimCubit extends Cubit<NewClaimState> {
       claimData.putIfAbsent("Manager_Name", () => _pref.getString('email'));
       claimData.putIfAbsent("Surveyor_Name", () => _pref.getString('email'));
       final Claim _claim = Claim.fromJson(claimData);
+      log(_claim.toMap().toString());
       await _repository.newClaim(_claim);
       emit(CreatedClaim());
     } on SocketException {

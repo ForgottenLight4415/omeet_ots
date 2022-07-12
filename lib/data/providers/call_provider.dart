@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,16 +22,13 @@ class CallProvider extends AppServerProvider {
   }
 
   Future<bool> sendMessage({required String claimNumber, required String phoneNumber}) async {
-    final Map<String, dynamic> _data = <String, dynamic>{
-      "key": AppStrings.messageKey,
-      "entity": AppStrings.messageEntity,
-      "tempid": AppStrings.messageTempId,
-      "routeid": AppStrings.messageRouteId,
-      "type": AppStrings.messageType,
-      "contacts" : phoneNumber,
-      "senderid": AppStrings.messageSenderId,
-      "msg" : "Kindly join the video meet by clicking on ${AppStrings.messageMeetUrl}$claimNumber GODJNO",
-    };
-    return await messageRequest(_data);
+    final encodedUrl = Uri.encodeFull('http://sms.gooadvert.com/app/smsapi/index.php?key=562A39B5CE0B91&entity=1501693730000042530&tempid=1507165743678525012&routeid=636&type=text&contacts=$phoneNumber&senderid=GODJNO&msg=Kindly join the video meet by clicking on https://omeet.in/BAGIC_Extended_Warranty/OMEET/index.php?id=$claimNumber GODJNO');
+    final Response _response = await get(
+      Uri.parse(encodedUrl),
+      headers: <String, String>{
+        "Accept": "application/json",
+      },
+    );
+    return _response.statusCode == successCode;
   }
 }

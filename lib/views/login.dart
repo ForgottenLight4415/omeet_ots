@@ -199,7 +199,12 @@ class _SignInPageState extends State<SignInPage> {
 
   void _authListener(BuildContext context, AuthState state) {
     if (state is AuthSuccess) {
-      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      Navigator.pushNamed(context, '/otp', arguments: _emailController?.text);
+      _emailController?.clear();
+      _passwordController?.clear();
+      setState(() {
+        _crossFadeState = CrossFadeState.showFirst;
+      });
     } else if (state is AuthFailed) {
       setState(() {
         _crossFadeState = CrossFadeState.showFirst;
