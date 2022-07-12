@@ -68,7 +68,7 @@ class _SignInPageState extends State<SignInPage> {
                           children: <Widget>[
                             // LOGO
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 50.h),
+                              padding: const EdgeInsets.symmetric(vertical: 45.0),
                               child: Image.asset(
                                 "images/logo.png",
                                 height: 170.w,
@@ -100,7 +100,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 30.h),
+                            const SizedBox(height: 25.0),
                             CustomTextFormField(
                               textEditingController: _emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -109,7 +109,6 @@ class _SignInPageState extends State<SignInPage> {
                               hintText: "Enter registered email address",
                               validator: _isEmailValid,
                             ),
-                            SizedBox(height: 15.h),
                             CustomTextFormField(
                                 textEditingController: _passwordController,
                                 textInputAction: TextInputAction.go,
@@ -120,7 +119,7 @@ class _SignInPageState extends State<SignInPage> {
                                 onFieldSubmitted: (value) {
                                   _signIn();
                                 }),
-                            SizedBox(height: 30.h),
+                            const SizedBox(height: 18.0),
                             BlocProvider<AuthCubit>.value(
                               value: _authCubit!,
                               child: BlocListener<AuthCubit, AuthState>(

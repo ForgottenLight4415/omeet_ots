@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rc_clone/blocs/new_claim_cubit/new__claim_cubit.dart';
+import 'package:rc_clone/blocs/new_claim_cubit/new_claim_cubit.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/utilities/show_snackbars.dart';
 import 'package:rc_clone/utilities/upload_dialog.dart';
 import 'package:rc_clone/widgets/buttons.dart';
 import 'package:rc_clone/widgets/input_fields.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NewClaimPage extends StatefulWidget {
-
   const NewClaimPage({Key? key}) : super(key: key);
 
   @override
@@ -34,30 +31,34 @@ class _NewClaimPageState extends State<NewClaimPage> {
             child: BlocConsumer<NewClaimCubit, NewClaimState>(
               listener: (context, state) {
                 if (state is CreatingClaim) {
-                  showProgressDialog(context, label: "Creating", content: "Creating new claim");
+                  showProgressDialog(context,
+                      label: "Creating", content: "Creating new claim");
                 } else if (state is CreatedClaim) {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  showInfoSnackBar(context, "Claim created. Pull down to refresh", color: Colors.green);
+                  showInfoSnackBar(
+                      context, "Claim created. Pull down to refresh",
+                      color: Colors.green);
                 } else if (state is CreationFailed) {
                   Navigator.pop(context);
-                  showInfoSnackBar(context, "Failed to create claim.", color: Colors.red);
+                  showInfoSnackBar(context, "Failed to create claim.",
+                      color: Colors.red);
                 }
               },
               builder: (context, state) {
                 return IconButton(
                   onPressed: () async {
                     if (_key.currentState!.validate()) {
-                      showInfoSnackBar(context, "Creating claim", color: Colors.orange);
                       Map<String, dynamic> _data = {};
-                      final SharedPreferences _pref = await SharedPreferences.getInstance();
-                      _data.putIfAbsent("Manager_Name", () => _pref.getString('email'));
-                      _data.putIfAbsent("Surveyor_Name", () => _pref.getString('email'));
                       Claim.getLabelDataMap().forEach((key, value) {
-                        _data.putIfAbsent(value, () => _textEditingControllers![key]!.text);
+                        _data.putIfAbsent(
+                          value,
+                          () => _textEditingControllers![key]?.text ?? "",
+                        );
                       });
-                      final Claim _claim = Claim.fromJson(_data);
-                      BlocProvider.of<NewClaimCubit>(context).createClaim(claim: _claim);
+                      BlocProvider.of<NewClaimCubit>(context).createClaim(
+                        claimData: _data,
+                      );
                     }
                   },
                   icon: const Icon(Icons.check),
@@ -82,35 +83,43 @@ class _NewClaimPageState extends State<NewClaimPage> {
   }
 
   List<Widget> _createFormFields() {
-    final Map<String, String> claimFields = Claim.getLabelDataMap();
+    final List<String> claimFields = Claim.fields;
     final Map<String, TextEditingController> textEditingControllers = {};
-    List<Widget> textFields = <Widget>[];
-    claimFields.forEach((key, value) {
-      if (!(key == "Manager Name" || key == "Surveyor Name")) {
+    List<CustomTextFormField> textFields = <CustomTextFormField>[];
+    for (var fieldTitle in claimFields) {
+      if (!(fieldTitle == "Manager Name" || fieldTitle == "Surveyor Name")) {
         TextEditingController textEditingController = TextEditingController();
-        textEditingControllers.putIfAbsent(key, () => textEditingController);
+        textEditingControllers.putIfAbsent(
+            fieldTitle, () => textEditingController);
         textFields.add(
           CustomTextFormField(
             textEditingController: textEditingController,
-            label: key,
-            hintText: "Enter $key",
-            validator: key == "Insured_Name" || key == "Insured_Contact_Number" || key == "Claim_No" ? (value) {
-              if (value!.isEmpty) {
-                return "Please enter $key";
-              } else {
-                return null;
-              }
-            } : null,
-          ),
-        );
-        textFields.add(
-          SizedBox(
-            height: 12.h,
+            label: fieldTitle,
+            hintText: "Enter $fieldTitle",
+            validator: fieldTitle == "Insured_Name" ||
+                    fieldTitle == "Insured_Contact_Number" ||
+                    fieldTitle == "Claim_No"
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter $fieldTitle";
+                    } else {
+                      return null;
+                    }
+                  }
+                : null,
           ),
         );
       }
-    });
+    }
     _textEditingControllers = textEditingControllers;
     return textFields;
+  }
+
+  @override
+  void dispose() {
+    _textEditingControllers?.forEach((key, value) {
+      _textEditingControllers![key]?.dispose();
+    });
+    super.dispose();
   }
 }

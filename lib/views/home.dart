@@ -69,7 +69,8 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () async {
                     await AuthRepository().signOut();
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
                   },
                   icon: const Icon(Icons.logout),
                 ),
@@ -77,9 +78,9 @@ class _HomePageState extends State<HomePage> {
               title: Text(
                 'Claims',
                 style: Theme.of(context).textTheme.headline3!.copyWith(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w700,
-                ),
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               centerTitle: false,
               flexibleSpace: FlexibleSpaceBar(
@@ -103,9 +104,22 @@ class _HomePageState extends State<HomePage> {
             builder: (context, state) {
               if (state is GetClaimsSuccess) {
                 if (state.claims.isEmpty) {
-                  return const InformationWidget(
-                    svgImage: AppStrings.noDataImage,
-                    label: AppStrings.noClaims,
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      const InformationWidget(
+                        svgImage: AppStrings.noDataImage,
+                        label: AppStrings.noClaims,
+                      ),
+                      const SizedBox(height: 15.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          BlocProvider.of<GetClaimsCubit>(context).getClaims(context);
+                        },
+                        child: const Text("RELOAD"),
+                      ),
+                    ],
                   );
                 }
                 return RefreshIndicator(

@@ -13,7 +13,7 @@ class DataUploadProvider extends AppServerProvider {
     required double latitude,
     required double longitude,
     required File file,
-    isImage = false,
+    bool isImage = false,
   }) async {
     final int uploadId = await OMeetDatabase.instance.create(
       UploadObject(

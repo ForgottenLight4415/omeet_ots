@@ -4,18 +4,23 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rc_clone/data/models/claim.dart';
 import 'package:rc_clone/data/providers/app_server_provider.dart';
-import 'package:rc_clone/data/providers/claim_provider.dart';
+import 'package:rc_clone/data/repositories/claim_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-part 'new__claim_state.dart';
+part 'new_claim_state.dart';
 
 class NewClaimCubit extends Cubit<NewClaimState> {
-  final ClaimProvider _provider = ClaimProvider();
+  final ClaimRepository _repository = ClaimRepository();
   NewClaimCubit() : super(NewClaimInitial());
 
-  Future<void> createClaim({required Claim claim}) async {
+  Future<void> createClaim({required Map<String, dynamic> claimData}) async {
     emit(CreatingClaim());
     try {
-      await _provider.createClaim(claim);
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
+      claimData.putIfAbsent("Manager_Name", () => _pref.getString('email'));
+      claimData.putIfAbsent("Surveyor_Name", () => _pref.getString('email'));
+      final Claim _claim = Claim.fromJson(claimData);
+      await _repository.newClaim(_claim);
       emit(CreatedClaim());
     } on SocketException {
       emit(CreationFailed(500, "Failed to create new claim."));

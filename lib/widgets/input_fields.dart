@@ -52,29 +52,32 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(14.r),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(
-            color: _borderColor,
-            width: 2,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7.0),
+      child: Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(14.r),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14.r),
+            border: Border.all(
+              color: _borderColor,
+              width: 2,
+            ),
           ),
-        ),
-        child: TextFormField(
-          controller: widget.textEditingController,
-          focusNode: _focusNode,
-          keyboardType: widget.keyboardType,
-          decoration: InputDecoration(
-            label: Text(widget.label),
-            hintText: widget.hintText,
+          child: TextFormField(
+            controller: widget.textEditingController,
+            focusNode: _focusNode,
+            keyboardType: widget.keyboardType,
+            decoration: InputDecoration(
+              label: Text(widget.label),
+              hintText: widget.hintText,
+            ),
+            textInputAction: widget.textInputAction,
+            validator: widget.validator,
+            obscureText: widget.obscureText,
+            onFieldSubmitted: widget.onFieldSubmitted,
           ),
-          textInputAction: widget.textInputAction,
-          validator: widget.validator,
-          obscureText: widget.obscureText,
-          onFieldSubmitted: widget.onFieldSubmitted,
         ),
       ),
     );

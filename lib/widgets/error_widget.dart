@@ -59,6 +59,7 @@ class InformationWidget extends StatelessWidget {
           const SizedBox(height: 30),
           Text(
             label,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headline5!.copyWith(
                   fontFamily: AppStrings.secondaryFontFam,
                   fontWeight: FontWeight.w600,
