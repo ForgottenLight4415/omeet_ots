@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rc_clone/views/create_claim_page.dart';
 import 'package:rc_clone/views/documents_page.dart';
-import 'package:rc_clone/views/pdf_viewer.dart';
 import 'package:rc_clone/views/uploads_page.dart';
 
 import '../data/models/claim.dart';
 import '../utilities/camera_utility.dart';
+import '../views/doc_viewer.dart';
 import '../views/login.dart';
 import '../views/home.dart';
 import '../views/invalid_route.dart';
@@ -59,7 +59,7 @@ class RouteGenerator {
         return _platformDependentRouting(DocumentsPage(claimNumber: _claimNumber));
       case '/view/document':
         final String _documentUrl = args as String;
-        return _platformDependentRouting(PDFViewPage(documentUrl: _documentUrl));
+        return _platformDependentRouting(DocumentViewPage(documentUrl: _documentUrl));
 
       case '/new/claim':
         return _platformDependentRouting(const NewClaimPage());

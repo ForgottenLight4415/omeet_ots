@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:rc_clone/utilities/upload_dialog.dart';
 import 'package:rc_clone/widgets/snack_bar.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../data/repositories/data_upload_repo.dart';
 import '../../utilities/camera_utility.dart';
@@ -620,6 +621,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
 
   void onStopButtonPressed() {
     stopVideoRecording().then((XFile? file) async {
+      Wakelock.disable();
       if (mounted) {
         setState(() {});
       }
@@ -673,6 +675,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
   }
 
   Future<void> startVideoRecording() async {
+    Wakelock.enable();
     final CameraController? cameraController = controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {
