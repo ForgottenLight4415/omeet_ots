@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rc_clone/utilities/screen_capture.dart';
 import 'package:rc_clone/utilities/show_snackbars.dart';
+import 'package:rc_clone/utilities/video_record_service.dart';
 import 'package:rc_clone/widgets/snack_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -264,6 +265,7 @@ class _ClaimCardState extends State<ClaimCard> {
               faIcon: FontAwesomeIcons.fileAlt,
               label: "Documents",
               onPressed: () {
+                Navigator.pop(modalContext);
                 Navigator.pushNamed(
                   context,
                   '/documents',
@@ -303,9 +305,11 @@ class _ClaimCardState extends State<ClaimCard> {
             ClaimPageTiles(
               faIcon: FontAwesomeIcons.film,
               label: AppStrings.recordVideo,
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(modalContext);
-                recordVideo(context, widget.claim);
+                await recordVideo(context, widget.claim).then((_) => {
+                  setState(() {})
+                });
               },
             ),
             ClaimPageTiles(
@@ -365,6 +369,11 @@ class _ClaimCardState extends State<ClaimCard> {
       });
     } else if (_screenshotClaim != null &&
         _screenshotClaim == widget.claim.claimNumber) {
+      setState(() {
+        _cardColor = Colors.red.shade100;
+      });
+    } else if (VideoRecorderParams.claimNumber != null
+        && VideoRecorderParams.claimNumber == widget.claim.claimNumber) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });

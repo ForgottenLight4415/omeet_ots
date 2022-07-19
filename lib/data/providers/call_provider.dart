@@ -22,7 +22,9 @@ class CallProvider extends AppServerProvider {
   }
 
   Future<bool> sendMessage({required String claimNumber, required String phoneNumber}) async {
-    final encodedUrl = Uri.encodeFull('http://sms.gooadvert.com/app/smsapi/index.php?key=562A39B5CE0B91&entity=1501693730000042530&tempid=1507165743678525012&routeid=636&type=text&contacts=$phoneNumber&senderid=GODJNO&msg=Kindly join the video meet by clicking on https://omeet.in/BAGIC_Extended_Warranty/OMEET/index.php?id=$claimNumber GODJNO');
+    claimNumber = claimNumber.replaceAll(RegExp(r"\D"), "");
+    final String meetId = claimNumber + phoneNumber;
+    final encodedUrl = Uri.encodeFull('http://sms.gooadvert.com/app/smsapi/index.php?key=562A39B5CE0B91&entity=1501693730000042530&tempid=1507165743678525012&routeid=636&type=text&contacts=$phoneNumber&senderid=GODJNO&msg=Kindly join the video meet by clicking on https://omeet.in/BAGIC_Extended_Warranty/OMEET/index.php?id=$meetId GODJNO');
     final Response _response = await get(
       Uri.parse(encodedUrl),
       headers: <String, String>{
