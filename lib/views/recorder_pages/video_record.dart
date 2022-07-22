@@ -266,7 +266,7 @@ class _VideoRecordPageState extends State<VideoRecordPage> with WidgetsBindingOb
         );
         showProgressDialog(context);
         bool _result = await _repository.uploadData(
-          claimNumber: widget.arguments.claim.claimNumber,
+          claimNumber: VideoRecorderParams.claimNumber ?? "NULL",
           latitude: _locationData.latitude ?? 0,
           longitude: _locationData.longitude ?? 0,
           file: _videoFile,

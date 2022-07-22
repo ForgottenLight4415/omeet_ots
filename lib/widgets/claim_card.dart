@@ -307,8 +307,8 @@ class _ClaimCardState extends State<ClaimCard> {
               label: AppStrings.recordVideo,
               onPressed: () async {
                 Navigator.pop(modalContext);
-                await recordVideo(context, widget.claim).then((_) => {
-                  setState(() {})
+                await recordVideo(context, widget.claim).then((_) {
+                  _setCardColor();
                 });
               },
             ),
