@@ -123,9 +123,9 @@ packages:
   ed_screen_recorder:
     dependency: "direct main"
     description:
-      name: ed_screen_recorder
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: ed_screen_recorder-main
+      relative: true
+    source: path
     version: "0.0.10"
   fake_async:
     dependency: transitive
