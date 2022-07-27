@@ -54,9 +54,9 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
 
   TextStyle customBodyTextOne(BuildContext context) {
     return Theme.of(context).textTheme.bodyText1!.copyWith(
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        );
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    );
   }
 
   @override
@@ -105,8 +105,8 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
           "Tap \"Start meeting\" to join the meet",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline5!.copyWith(
-                fontFamily: 'Open Sans',
-              ),
+            fontFamily: 'Open Sans',
+          ),
         ),
         SizedBox(height: 10.h),
         Text(
@@ -229,11 +229,9 @@ class _VideoMeetPageState extends State<VideoMeetPage> with AutomaticKeepAliveCl
         FeatureFlagEnum.LIVE_STREAMING_ENABLED: false,
         FeatureFlagEnum.RECORDING_ENABLED: false,
       };
-      final String claimNumber = widget.claim.claimNumber;
-      final String strippedClaimNumber = claimNumber.replaceAll(RegExp(r"\D"), "");
-      final String meetId = strippedClaimNumber + widget.claim.insuredContactNumber;
+      final String meetId = widget.claim.claimNumber;
       var options = JitsiMeetingOptions(room: meetId)
-        ..serverURL = "https://omeet.in/BAGIC_Extended_Warranty/OMEET/index.php?id=$meetId"
+        ..serverURL = "https://hi.omeet.in/${widget.claim.insuredContactNumber}"
         ..subject = "Meeting with ${widget.claim.insuredName}"
         ..userDisplayName = "OMeet Agent"
         ..userEmail = await AuthenticationProvider.getEmail()
