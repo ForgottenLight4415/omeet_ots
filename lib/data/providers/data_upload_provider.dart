@@ -13,7 +13,7 @@ class DataUploadProvider extends AppServerProvider {
     required double latitude,
     required double longitude,
     required File file,
-    bool isImage = false,
+    bool isDoc = false,
   }) async {
     final int uploadId = await OMeetDatabase.instance.create(
       UploadObject(
@@ -28,7 +28,7 @@ class DataUploadProvider extends AppServerProvider {
       "POST",
       Uri.https(
         AppStrings.baseUrl,
-        AppStrings.subDirectory + (isImage ? AppStrings.uploadImageUrl : AppStrings.uploadVideoUrl),
+        AppStrings.subDirectory + (isDoc ? AppStrings.uploadDocUrl : AppStrings.uploadVideoUrl),
       ),
     );
     _request.headers.addAll({
