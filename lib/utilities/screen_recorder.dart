@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rc_clone/data/repositories/data_upload_repo.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
+import 'package:rc_clone/utilities/show_snackbars.dart';
 import 'package:rc_clone/utilities/upload_dialog.dart';
 
 class ScreenRecorder {
@@ -36,29 +37,27 @@ class ScreenRecorder {
     File _videoFile = response!['file'];
     final DataUploadRepository _repository = DataUploadRepository();
     showProgressDialog(context);
-    bool _result = await _repository.uploadData(
-      claimNumber: claimNumber,
-      latitude: 0,
-      longitude: 0,
-      file: _videoFile,
-    );
-    Navigator.pop(context);
-    if (_result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.fileUploaded),
-          backgroundColor: Colors.green,
-        ),
+    try {
+      bool _result = await _repository.uploadData(
+        claimNumber: claimNumber,
+        latitude: 0,
+        longitude: 0,
+        file: _videoFile,
       );
-      _videoFile.delete();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(AppStrings.fileUploadFailed),
-          backgroundColor: Colors.red,
-        ),
+      if (_result) {
+        showInfoSnackBar(context, AppStrings.fileUploaded, color: Colors.green);
+        _videoFile.delete();
+      } else {
+        throw Exception("An unknown error occurred while uploading the file.");
+      }
+    } on Exception catch (e) {
+      showInfoSnackBar(
+        context,
+        AppStrings.fileUploadFailed + "(${e.toString()})",
+        color: Colors.red,
       );
     }
+    Navigator.pop(context);
     _claimNumber = null;
     _isRecording = false;
     return response;
