@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart';
 
@@ -32,16 +33,20 @@ class AppServerProvider {
   }
 
   Future<bool> callRequest(Map<String, dynamic> data) async {
-    final Response _response = await get(
+    final Response _response = await post(
       Uri.https(
-        AppStrings.bridgeCallBaseUrl,
-        AppStrings.voiceCallUrl,
-        data,
+        AppStrings.bridgeCallBaseUrlNew,
+        AppStrings.voiceCallUrlNew,
       ),
       headers: <String, String>{
         "Accept": "application/json",
+        "Content-Type": "application/json; charset=UTF-8",
+        "access-key": AppStrings.callTokenNew,
       },
+      body: jsonEncode(data),
     );
+    log(_response.statusCode.toString());
+    log(_response.body);
     return _response.statusCode == successCode;
   }
 }
