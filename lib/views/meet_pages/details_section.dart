@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/views/meet_pages/details.dart';
 
 import '../../data/models/claim.dart';
-import '../../utilities/app_constants.dart';
-import '../../widgets/card_detail_text.dart';
 
 class MeetDetails extends StatefulWidget {
   final Claim claim;
