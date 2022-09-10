@@ -13,7 +13,7 @@ import '../../utilities/camera_utility.dart';
 import '../../data/repositories/data_upload_repo.dart';
 
 class CaptureImagePage extends StatefulWidget {
-  final CameraCaptureArguments arguments;
+  final CameraCaptureConfig arguments;
 
   const CaptureImagePage({Key? key, required this.arguments}) : super(key: key);
 

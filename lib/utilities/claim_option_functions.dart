@@ -6,6 +6,8 @@ import 'package:location/location.dart';
 import 'package:rc_clone/utilities/location_service.dart';
 import 'package:rc_clone/utilities/screen_capture.dart';
 import 'package:rc_clone/utilities/screen_recorder.dart';
+import 'package:rc_clone/utilities/video_record_service.dart';
+import 'package:rc_clone/views/recorder_pages/video_record.dart';
 
 import '../data/models/claim.dart';
 import 'app_permission_manager.dart';
@@ -112,7 +114,7 @@ Future<void> recordAudio(BuildContext context, Claim claim) async {
   }
 }
 
-Future<void> recordVideo(BuildContext context, Claim claim) async {
+Future<void> recordVideo(BuildContext context, Claim claim, VideoRecorderConfig videoRecorderConfig) async {
   showInfoSnackBar(context, "Checking permissions...");
   LocationData? locationData = await _getLocationData(context);
   bool cameraStatus = await cameraPermission();
@@ -123,11 +125,13 @@ Future<void> recordVideo(BuildContext context, Claim claim) async {
     List<CameraDescription>? _cameras;
     try {
       _cameras = await availableCameras();
+      videoRecorderConfig.setCameraList(_cameras);
+      videoRecorderConfig.setLocation(locationData);
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       await Navigator.pushNamed(
         context,
         '/record/video',
-        arguments: CameraCaptureArguments(_cameras, locationData, claim),
+        arguments: VideoPageConfig(videoRecorderConfig, claim.claimNumber),
       );
     } on CameraException catch (e) {
       showInfoSnackBar(context, "Failed to determine available cameras. (${e.description})", color: Colors.red);
@@ -155,7 +159,7 @@ Future<void> captureImage(BuildContext context, Claim claim) async {
       Navigator.pushNamed(
         context,
         '/capture/image',
-        arguments: CameraCaptureArguments(_cameras, _locationData, claim),
+        arguments: CameraCaptureConfig(_cameras, _locationData, claim),
       );
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
     } on CameraException catch (e) {

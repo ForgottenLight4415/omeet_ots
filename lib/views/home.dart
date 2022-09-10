@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rc_clone/utilities/app_constants.dart';
 import 'package:rc_clone/utilities/screen_capture.dart';
+import 'package:rc_clone/utilities/video_record_service.dart';
 
 import '../blocs/home_bloc/get_claims_cubit.dart';
 import '../data/repositories/auth_repo.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   String? _searchQuery;
   ScreenRecorder? _screenRecorder;
   ScreenCapture? _screenCapture;
+  VideoRecorderConfig? _videoRecorderConfig;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     });
     _screenRecorder = ScreenRecorder();
     _screenCapture = ScreenCapture();
+    _videoRecorderConfig = VideoRecorderConfig();
   }
 
   @override
@@ -133,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                       claim: state.claims[index],
                       screenRecorder: _screenRecorder!,
                       screenCapture: _screenCapture!,
+                      videoRecorderConfig: _videoRecorderConfig!,
                     ),
                   ),
                 );

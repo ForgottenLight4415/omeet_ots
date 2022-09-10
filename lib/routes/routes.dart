@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rc_clone/views/create_claim_page.dart';
 import 'package:rc_clone/views/documents_page.dart';
+import 'package:rc_clone/views/meet_pages/details_page.dart';
 import 'package:rc_clone/views/uploads_page.dart';
 
 import '../data/models/claim.dart';
@@ -41,14 +42,19 @@ class RouteGenerator {
         final AudioRecordArguments _audioRecArguments = args as AudioRecordArguments;
         return _platformDependentRouting(AudioRecordPage(arguments: _audioRecArguments));
       case '/record/video':
-        final CameraCaptureArguments _videoRecArgs = args as CameraCaptureArguments;
+        final VideoPageConfig _videoRecArgs = args as VideoPageConfig;
         return _platformDependentRouting(
-          VideoRecordPage(arguments: _videoRecArgs),
+          VideoRecordPage(config: _videoRecArgs),
         );
       case '/capture/image':
-        final CameraCaptureArguments _captureImageArgs = args as CameraCaptureArguments;
+        final CameraCaptureConfig _captureImageArgs = args as CameraCaptureConfig;
         return _platformDependentRouting(
           CaptureImagePage(arguments: _captureImageArgs),
+        );
+      case '/claim/details':
+        final Claim _claim = args as Claim;
+        return _platformDependentRouting(
+          DetailsPage(claim: _claim),
         );
 
       case '/uploads':

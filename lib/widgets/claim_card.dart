@@ -24,12 +24,14 @@ class ClaimCard extends StatefulWidget {
   final Claim claim;
   final ScreenRecorder screenRecorder;
   final ScreenCapture screenCapture;
+  final VideoRecorderConfig videoRecorderConfig;
 
   const ClaimCard({
     Key? key,
     required this.claim,
     required this.screenRecorder,
     required this.screenCapture,
+    required this.videoRecorderConfig,
   }) : super(key: key);
 
   @override
@@ -309,7 +311,11 @@ class _ClaimCardState extends State<ClaimCard> {
               label: AppStrings.recordVideo,
               onPressed: () async {
                 Navigator.pop(modalContext);
-                await recordVideo(context, widget.claim).then((_) {
+                await recordVideo(
+                    context,
+                    widget.claim,
+                    widget.videoRecorderConfig,
+                ).then((_) {
                   _setCardColor();
                 });
               },
@@ -322,6 +328,10 @@ class _ClaimCardState extends State<ClaimCard> {
                 videoCall(context, widget.claim);
               },
             ),
+            ClaimPageTiles(faIcon: FontAwesomeIcons.info, label: "Details", onPressed: () {
+              Navigator.pop(modalContext);
+              Navigator.pushNamed(context, '/claim/details', arguments: widget.claim);
+            })
             // ClaimPageTiles(
             //   faIcon: FontAwesomeIcons.recordVinyl,
             //   label: _getScreenRecordText(),
@@ -341,16 +351,16 @@ class _ClaimCardState extends State<ClaimCard> {
     );
   }
 
-  String _getScreenRecordText() {
-    if (widget.screenRecorder.isRecording) {
-      if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
-        return "Stop for ${widget.screenRecorder.claimNumber}";
-      } else {
-        return "Stop recording screen";
-      }
-    }
-    return "Record screen";
-  }
+  // String _getScreenRecordText() {
+  //   if (widget.screenRecorder.isRecording) {
+  //     if (widget.screenRecorder.claimNumber != widget.claim.claimNumber) {
+  //       return "Stop for ${widget.screenRecorder.claimNumber}";
+  //     } else {
+  //       return "Stop recording screen";
+  //     }
+  //   }
+  //   return "Record screen";
+  // }
 
   String _getScreenshotText() {
     if (widget.screenCapture.isServiceRunning) {
@@ -374,8 +384,8 @@ class _ClaimCardState extends State<ClaimCard> {
       setState(() {
         _cardColor = Colors.red.shade100;
       });
-    } else if (VideoRecorderParams.claimNumber != null
-        && VideoRecorderParams.claimNumber == widget.claim.claimNumber) {
+    } else if (widget.videoRecorderConfig.claimNumber != null
+        && widget.videoRecorderConfig.claimNumber == widget.claim.claimNumber) {
       setState(() {
         _cardColor = Colors.red.shade100;
       });
